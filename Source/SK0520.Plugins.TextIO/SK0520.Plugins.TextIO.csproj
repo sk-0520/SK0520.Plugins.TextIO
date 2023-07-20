@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>SK0520.Plugins.TextIO</RootNamespace>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Pe\Source\Pe\Pe.Embedded\**\*.cs" Exclude="..\Pe\Source\Pe\Pe.Embedded\obj\**\*.cs" />
+    <None Remove="Plugin.ico" />
+    <ProjectReference Include="..\Pe\Source\Pe\Pe.Bridge\Pe.Bridge.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\..\Plugin.ico" />
+  </ItemGroup>
+</Project>
