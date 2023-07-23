@@ -8,7 +8,7 @@ using ContentTypeTextNet.Pe.Embedded.Abstract;
 
 namespace SK0520.Plugins.TextIO
 {
-    public class TextIO: PluginBase// IAddon, ITheme, IPreferences
+    public class TextIO: PluginBase, IAddon// IAddon, ITheme, IPreferences
     {
         #region variable
         #endregion
