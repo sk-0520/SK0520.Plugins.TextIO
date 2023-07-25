@@ -17,4 +17,8 @@
   <ItemGroup>
     <Resource Include="..\..\Plugin.ico" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
 </Project>
