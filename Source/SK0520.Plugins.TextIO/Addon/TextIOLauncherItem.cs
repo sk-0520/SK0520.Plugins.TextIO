@@ -3,7 +3,7 @@ using ContentTypeTextNet.Pe.Bridge.Plugin;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Addon;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Preferences;
 using ContentTypeTextNet.Pe.Embedded.Abstract;
-using ContentTypeTextNet.Pe.Embedded.Models;
+using SK0520.Plugins.TextIO.ViewModels;
 using SK0520.Plugins.TextIO.Views;
 using System;
 using System.Collections.Generic;
@@ -47,8 +47,7 @@ namespace SK0520.Plugins.TextIO.Addon
 
         public override void Execute(string? argument, ICommandExecuteParameter commandExecuteParameter, ILauncherItemExtensionExecuteParameter launcherItemExtensionExecuteParameter, ILauncherItemAddonContext launcherItemAddonContext)
         {
-            //var viewModel = new ClockLauncherItemWindowViewModel(this, SkeletonImplements, DispatcherWrapper, LoggerFactory);
-            var viewModel = new Object();
+            var viewModel = new TextIOLauncherItemViewModel(this, SkeletonImplements, DispatcherWrapper, LoggerFactory);
             var view = new TextIOLauncherItemWindow()
             {
                 DataContext = viewModel,
@@ -56,9 +55,10 @@ namespace SK0520.Plugins.TextIO.Addon
 
             launcherItemExtensionExecuteParameter.ViewSupporter.RegisterWindow(
                 view,
-                () => true,//!viewModel.CanStop,
+                () => !viewModel.IsRunning,
                 () => {
                     view.DataContext = null;
+                    viewModel.Dispose();
                 }
             );
         }
