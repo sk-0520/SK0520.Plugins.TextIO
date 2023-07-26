@@ -18,7 +18,7 @@ jobs:
 
       - name: <Build> Plugin
         shell: pwsh
-        run: .\Build\make-buildtools.ps1
+        run: .\FullBuild.ps1
 
       - name: <Artifact> Plugin
         uses: actions/upload-artifact@v3
