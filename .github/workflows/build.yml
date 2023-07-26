@@ -1,0 +1,43 @@
+name: Build
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+  
+    steps:
+      - name: <Checkout> Repository
+        uses: actions/checkout@v3
+
+      - name: <Add> msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
+
+      - name: <Build> Plugin
+        shell: pwsh
+        run: .\Build\make-buildtools.ps1
+
+      - name: <Artifact> Plugin
+        uses: actions/upload-artifact@v3
+        with:
+          name: Plugin
+          path: |
+            Output\*.zip
+            Output\update-*.json
+
+  deploy:
+    needs: build
+
+    if: github.ref == 'refs/heads/master'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: <Download> Application
+        uses: actions/download-artifact@v3
+        with:
+          name: Plugin
+          path: Output
