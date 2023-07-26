@@ -60,5 +60,4 @@ foreach($platform in $Platforms) {
 }
 
 ConvertTo-Json -InputObject $infoItems `
-| ForEach-Object { [Text.Encoding]::UTF8.GetBytes($_) } `
-| Set-Content -Path $Destination -Encoding Byte
+| Set-Content -Path $Destination
