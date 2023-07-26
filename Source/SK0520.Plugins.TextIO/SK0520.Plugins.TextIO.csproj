@@ -8,11 +8,11 @@
   <ItemGroup>
     <Compile Include="..\Pe\Source\Pe\Pe.Embedded\**\*.cs" Exclude="..\Pe\Source\Pe\Pe.Embedded\obj\**\*.cs" />
     <None Remove="Plugin.ico" />
+    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     <ProjectReference Include="..\Pe\Source\Pe\Pe.Bridge\Pe.Bridge.csproj">
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
     </ProjectReference>
-    <ProjectReference Include="..\Pe\Source\Pe\Pe.Main\Pe.Main.csproj" />
   </ItemGroup>
 
   <ItemGroup>

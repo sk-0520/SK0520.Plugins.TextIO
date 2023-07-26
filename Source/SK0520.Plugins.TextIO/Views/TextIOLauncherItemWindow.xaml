@@ -27,7 +27,6 @@
                       EnableEmailHyperlinks="False"
                       EnableHyperlinks="False"
                       EnableVirtualSpace="False"
-                      ShowColumnRuler="True"
                       ShowEndOfLine="True"
                       ShowSpaces="True"
                       ShowTabs="True"
