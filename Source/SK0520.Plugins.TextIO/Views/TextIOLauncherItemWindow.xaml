@@ -51,16 +51,22 @@
 
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="2*" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ListBox Grid.Row="0" Margin="{StaticResource CommonThickness}" />
+                <ToolBar Grid.Row="0">
+                    <Button>add</Button>
+                    <Button>delete</Button>
+                </ToolBar>
 
-                <GridSplitter Grid.Row="1" Height="{StaticResource GridSplitter}" />
+                <ListBox Grid.Row="1" Margin="{StaticResource CommonThickness}" />
 
-                <GroupBox Grid.Row="2" Margin="{StaticResource CommonThickness}" />
+                <GridSplitter Grid.Row="2" Height="{StaticResource GridSplitter}" />
+
+                <GroupBox Grid.Row="3" Margin="{StaticResource CommonThickness}" />
             </Grid>
 
             <GridSplitter Grid.Column="1" Width="{StaticResource GridSplitter}" />
@@ -74,8 +80,11 @@
                 </Grid.RowDefinitions>
 
                 <ToolBar Grid.Row="0">
-                    <TextBlock>input</TextBlock>
-                    <TextBlock>output</TextBlock>
+                    <Label>input</Label>
+                    <Button Command="ApplicationCommands.Copy">copy</Button>
+                    <Button Command="ApplicationCommands.Paste">paste</Button>
+                    <Separator />
+                    <Label>output</Label>
                 </ToolBar>
 
                 <sharpdevelop_avalonedit:TextEditor Grid.Row="1" Style="{StaticResource Editor}" />
