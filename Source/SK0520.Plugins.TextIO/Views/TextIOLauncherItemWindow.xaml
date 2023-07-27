@@ -11,6 +11,7 @@
     Width="800"
     WindowStartupLocation="CenterScreen"
     ResizeMode="CanResizeWithGrip"
+    Topmost="{Binding IsChecked, ElementName=topmost}"
     
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -18,6 +19,9 @@
     <Window.Resources>
         <system:Double x:Key="GridSplitter">3</system:Double>
         <Thickness x:Key="CommonThickness">3</Thickness>
+        <Style x:Key="ToolbarTitle" TargetType="Label">
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
         <Style x:Key="Editor" TargetType="{x:Type sharpdevelop_avalonedit:TextEditor}">
             <Setter Property="Margin" Value="{StaticResource CommonThickness}" />
             <Setter Property="ShowLineNumbers" Value="True" />
@@ -44,12 +48,31 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="4*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" MinWidth="120" MaxWidth="300" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="4*" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <ToolBar Grid.Row="0">
+                    <Label Style="{StaticResource ToolbarTitle}">input</Label>
+                    <Button Command="ApplicationCommands.Copy">copy</Button>
+                    <Button Command="ApplicationCommands.Paste">paste</Button>
+                </ToolBar>
+
+                <sharpdevelop_avalonedit:TextEditor Grid.Row="1" Style="{StaticResource Editor}" />
+            </Grid>
+
+            <GridSplitter Grid.Column="1" Width="{StaticResource GridSplitter}" />
+
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="2*" />
@@ -60,6 +83,8 @@
                 <ToolBar Grid.Row="0">
                     <Button>add</Button>
                     <Button>delete</Button>
+                    <Separator />
+                    <Button>execute</Button>
                 </ToolBar>
 
                 <ListBox Grid.Row="1" Margin="{StaticResource CommonThickness}" />
@@ -69,37 +94,25 @@
                 <GroupBox Grid.Row="3" Margin="{StaticResource CommonThickness}" />
             </Grid>
 
-            <GridSplitter Grid.Column="1" Width="{StaticResource GridSplitter}" />
+            <GridSplitter Grid.Column="3" Width="{StaticResource GridSplitter}" />
 
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="4">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <ToolBar Grid.Row="0">
-                    <Label>input</Label>
+                    <Label Style="{StaticResource ToolbarTitle}">output</Label>
                     <Button Command="ApplicationCommands.Copy">copy</Button>
-                    <Button Command="ApplicationCommands.Paste">paste</Button>
-                    <Separator />
-                    <Label>output</Label>
                 </ToolBar>
-
-                <sharpdevelop_avalonedit:TextEditor Grid.Row="1" Style="{StaticResource Editor}" />
-
-                <GridSplitter Grid.Row="2" Height="{StaticResource GridSplitter}" />
 
                 <sharpdevelop_avalonedit:TextEditor Grid.Row="3" IsReadOnly="True" Style="{StaticResource Editor}" />
             </Grid>
         </Grid>
 
-
         <StatusBar Grid.Row="1">
-            <CheckBox>topmost</CheckBox>
+            <CheckBox x:Name="topmost">topmost</CheckBox>
         </StatusBar>
-
-
     </Grid>
 </Window>
