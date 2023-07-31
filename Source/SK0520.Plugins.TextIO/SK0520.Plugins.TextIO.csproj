@@ -9,6 +9,7 @@
     <Compile Include="..\Pe\Source\Pe\Pe.Embedded\**\*.cs" Exclude="..\Pe\Source\Pe\Pe.Embedded\obj\**\*.cs" />
     <None Remove="Plugin.ico" />
     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+    <PackageReference Include="Jint" Version="2.11.58" />
     <ProjectReference Include="..\Pe\Source\Pe\Pe.Bridge\Pe.Bridge.csproj">
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
