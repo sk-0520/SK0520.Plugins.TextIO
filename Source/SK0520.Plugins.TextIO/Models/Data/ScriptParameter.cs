@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace SK0520.Plugins.TextIO.Models.Data
 {
-    public record ScriptSetting(
+    public record ScriptParameter(
         string Name,
-        List<ScriptParameter> Parameters,
-        string Source
+        ScriptParameterKind Kind
     );
 }
