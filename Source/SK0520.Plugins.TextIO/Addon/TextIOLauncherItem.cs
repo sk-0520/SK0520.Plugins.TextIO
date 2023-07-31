@@ -47,7 +47,7 @@ namespace SK0520.Plugins.TextIO.Addon
 
         public override void Execute(string? argument, ICommandExecuteParameter commandExecuteParameter, ILauncherItemExtensionExecuteParameter launcherItemExtensionExecuteParameter, ILauncherItemAddonContext launcherItemAddonContext)
         {
-            var viewModel = new TextIOLauncherItemViewModel(this, SkeletonImplements, DispatcherWrapper, LoggerFactory);
+            var viewModel = new TextIOLauncherItemViewModel(this, launcherItemAddonContext, SkeletonImplements, DispatcherWrapper, LoggerFactory);
             var view = new TextIOLauncherItemWindow()
             {
                 DataContext = viewModel,

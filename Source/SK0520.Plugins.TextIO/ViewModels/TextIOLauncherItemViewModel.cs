@@ -1,4 +1,5 @@
 ﻿using ContentTypeTextNet.Pe.Bridge.Models;
+using ContentTypeTextNet.Pe.Bridge.Plugin.Addon;
 using ContentTypeTextNet.Pe.Bridge.ViewModels;
 using Microsoft.Extensions.Logging;
 using SK0520.Plugins.TextIO.Addon;
@@ -18,15 +19,17 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #endregion
 
-        public TextIOLauncherItemViewModel(TextIOLauncherItem item, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
+        public TextIOLauncherItemViewModel(TextIOLauncherItem item, ILauncherItemAddonContext launcherItemAddonContext, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(skeletonImplements, dispatcherWrapper, loggerFactory)
         {
             Item = item;
+            LauncherItemAddonContext = launcherItemAddonContext;
         }
 
         #region property
 
         private TextIOLauncherItem Item { get; }
+        private ILauncherItemAddonContext LauncherItemAddonContext { get; }
 
         public bool IsRunning
         {
@@ -34,6 +37,10 @@ namespace SK0520.Plugins.TextIO.ViewModels
             set => SetProperty(ref this._isRunning, value);
         }
 
-        #endregion  
+        #endregion
+
+        #region command
+
+        #endregion
     }
 }
