@@ -12,4 +12,8 @@
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SK0520.Plugins.TextIO\SK0520.Plugins.TextIO.csproj" />
+  </ItemGroup>
+
 </Project>
