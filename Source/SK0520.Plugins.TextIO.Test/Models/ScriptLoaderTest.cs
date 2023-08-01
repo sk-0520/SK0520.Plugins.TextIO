@@ -57,7 +57,7 @@ namespace SK0520.Plugins.TextIO.Test.Models
             Assert.IsFalse(actual1.Head.Parameters[3].Required);
             Assert.AreEqual(ScriptParameterKind.DateTime, actual1.Head.Parameters[3].Kind);
 
-            Assert.AreEqual("BODY", actual1.Body.Source);
+            Assert.AreEqual("BODY!", actual1.Body.Source);
         }
     }
 }
