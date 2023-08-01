@@ -14,6 +14,17 @@ namespace SK0520.Plugins.TextIO.Models
 
         public ScriptSetting LoadSource(string source)
         {
+            if(!source.StartsWith("/**", StringComparison.Ordinal))
+            {
+                throw new ArgumentException("/**");
+            }
+
+            var scriptDocTailIndex = source.IndexOf("*/");
+            if(scriptDocTailIndex == -1)
+            {
+                throw new ArgumentException("*/");
+            }
+
             throw new NotImplementedException();
         }
 

@@ -17,10 +17,11 @@ namespace SK0520.Plugins.TextIO.Models.Data
         string Source
     );
 
-    public record ScriptSetting {
-        public ScriptSetting(ScriptHeadSetting head,ScriptBodySetting body)
+    public record ScriptSetting
+    {
+        public ScriptSetting(ScriptHeadSetting head, ScriptBodySetting body)
         {
-            if(head.ScriptId != body.ScriptId)
+            if (head.ScriptId != body.ScriptId)
             {
                 throw new ArgumentException(nameof(body.ScriptId));
             }
