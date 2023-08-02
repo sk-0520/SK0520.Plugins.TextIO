@@ -37,11 +37,13 @@ namespace SK0520.Plugins.TextIO.Addon
             return reader.ReadToEnd();
         }
 
-        public void AddScriptFile(LauncherItemId launcherItemId, ILauncherItemAddonPersistence persistence, FileInfo file)
+        public void AddScriptFile(LauncherItemId launcherItemId, IPluginPersistence persistence, FileInfo file)
         {
             var source = ReadText(file);
             var scriptLoader = new ScriptLoader();
             var script = scriptLoader.LoadSource(source);
+
+            
 
         }
 
@@ -67,7 +69,7 @@ namespace SK0520.Plugins.TextIO.Addon
 
         public override void Execute(string? argument, ICommandExecuteParameter commandExecuteParameter, ILauncherItemExtensionExecuteParameter launcherItemExtensionExecuteParameter, ILauncherItemAddonContext launcherItemAddonContext)
         {
-            var viewModel = new TextIOLauncherItemViewModel(this, launcherItemAddonContext, SkeletonImplements, DispatcherWrapper, LoggerFactory);
+            var viewModel = new TextIOLauncherItemViewModel(this, , launcherItemAddonContext, SkeletonImplements, DispatcherWrapper, LoggerFactory);
             var view = new TextIOLauncherItemWindow()
             {
                 DataContext = viewModel,
