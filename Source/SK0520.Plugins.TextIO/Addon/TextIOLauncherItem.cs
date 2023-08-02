@@ -57,8 +57,8 @@ namespace SK0520.Plugins.TextIO.Addon
                 list.ScriptIds.Add(script.ScriptId);
 
                 c.Storage.Persistence.Normal.Set(c.LauncherItemId, string.Empty, list);
-                c.Storage.Persistence.Normal.Set(c.LauncherItemId, script.ScriptId.ToString("D"), script.Head);
-                c.Storage.Persistence.Large.Set(c.LauncherItemId, script.ScriptId.ToString("D"), script.Body);
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, "H:" + script.ScriptId.ToString("D"), script.Head);
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, "B:" + script.ScriptId.ToString("D"), script.Body);
             });
 
         }
