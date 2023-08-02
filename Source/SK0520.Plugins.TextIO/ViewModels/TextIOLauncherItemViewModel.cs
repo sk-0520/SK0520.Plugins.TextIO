@@ -25,18 +25,16 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #endregion
 
-        public TextIOLauncherItemViewModel(TextIOLauncherItem item, IContextWorker contextWorker, ILauncherItemAddonContext launcherItemAddonContext, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
+        public TextIOLauncherItemViewModel(TextIOLauncherItem item, ILauncherItemAddonContext launcherItemAddonContext, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(skeletonImplements, dispatcherWrapper, loggerFactory)
         {
             Item = item;
-            ContextWorker = contextWorker;
             LauncherItemAddonContext = launcherItemAddonContext;
         }
 
         #region property
 
         private TextIOLauncherItem Item { get; }
-        private IContextWorker ContextWorker { get; }
         private ILauncherItemAddonContext LauncherItemAddonContext { get; }
 
         public bool IsRunning
@@ -67,12 +65,11 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             {
                                 var filePath = dialog.FileName;
                                 var file = new FileInfo(filePath);
-                                ContextWorker.RunPlugin(c =>
-                                {
-                                    Item.AddScriptFile(LauncherItemAddonContext.LauncherItemId, c.Storage.Persistence, file);
-                                });
+                                Item.AddScriptFile(file);
                             }
-                        } catch (Exception ex) {
+                        }
+                        catch (Exception ex)
+                        {
                             Logger.LogError(ex, ex.Message);
                             MessageBox.Show(ex.ToString());
                         }

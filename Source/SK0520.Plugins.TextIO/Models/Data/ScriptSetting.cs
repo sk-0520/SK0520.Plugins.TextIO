@@ -30,6 +30,8 @@ namespace SK0520.Plugins.TextIO.Models.Data
             Body = body;
         }
 
+        public Guid ScriptId => Head.ScriptId;
+
         public ScriptHeadSetting Head { get; }
         public ScriptBodySetting Body { get; }
     }

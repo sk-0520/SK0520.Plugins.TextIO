@@ -4,10 +4,12 @@ using ContentTypeTextNet.Pe.Bridge.Plugin.Addon;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Preferences;
 using ContentTypeTextNet.Pe.Embedded.Abstract;
 using SK0520.Plugins.TextIO.Models;
+using SK0520.Plugins.TextIO.Models.Data;
 using SK0520.Plugins.TextIO.ViewModels;
 using SK0520.Plugins.TextIO.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,13 +39,27 @@ namespace SK0520.Plugins.TextIO.Addon
             return reader.ReadToEnd();
         }
 
-        public void AddScriptFile(LauncherItemId launcherItemId, IPluginPersistence persistence, FileInfo file)
+        public void AddScriptFile(FileInfo file)
         {
             var source = ReadText(file);
             var scriptLoader = new ScriptLoader();
             var script = scriptLoader.LoadSource(source);
 
-            
+            ContextWorker.RunLauncherItemAddon(c =>
+            {
+                ScriptList? list = null;
+                if (!c.Storage.Persistence.Normal.TryGet(c.LauncherItemId, string.Empty, out list))
+                {
+                    list = new ScriptList();
+                }
+                Debug.Assert(list is not null);
+
+                list.ScriptIds.Add(script.ScriptId);
+
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, string.Empty, list);
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, script.ScriptId.ToString("D"), script.Head);
+                c.Storage.Persistence.Large.Set(c.LauncherItemId, script.ScriptId.ToString("D"), script.Body);
+            });
 
         }
 
@@ -69,7 +85,7 @@ namespace SK0520.Plugins.TextIO.Addon
 
         public override void Execute(string? argument, ICommandExecuteParameter commandExecuteParameter, ILauncherItemExtensionExecuteParameter launcherItemExtensionExecuteParameter, ILauncherItemAddonContext launcherItemAddonContext)
         {
-            var viewModel = new TextIOLauncherItemViewModel(this, , launcherItemAddonContext, SkeletonImplements, DispatcherWrapper, LoggerFactory);
+            var viewModel = new TextIOLauncherItemViewModel(this, launcherItemAddonContext, SkeletonImplements, DispatcherWrapper, LoggerFactory);
             var view = new TextIOLauncherItemWindow()
             {
                 DataContext = viewModel,
