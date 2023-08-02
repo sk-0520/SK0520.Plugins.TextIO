@@ -2,20 +2,26 @@
 using ContentTypeTextNet.Pe.Bridge.Plugin.Addon;
 using ContentTypeTextNet.Pe.Bridge.ViewModels;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 using SK0520.Plugins.TextIO.Addon;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace SK0520.Plugins.TextIO.ViewModels
 {
-    internal class TextIOLauncherItemViewModel : ViewModelSkeleton
+    public class TextIOLauncherItemViewModel : ViewModelSkeleton
     {
         #region variable
 
         private bool _isRunning = false;
+
+        private ICommand? _addScriptCommand;
 
         #endregion
 
@@ -40,6 +46,35 @@ namespace SK0520.Plugins.TextIO.ViewModels
         #endregion
 
         #region command
+
+        public ICommand AddScriptCommand
+        {
+            get
+            {
+                return this._addScriptCommand ??= CreateCommand(
+                    () =>
+                    {
+                        try
+                        {
+                            var dialog = new OpenFileDialog()
+                            {
+                                DefaultExt = ".js",
+                                Filter = "JavaScript (.js)|*.js",
+                            };
+                            if (dialog.ShowDialog().GetValueOrDefault())
+                            {
+                                var filePath = dialog.FileName;
+                                var file = new FileInfo(filePath);
+                                Item.AddScriptFile(LauncherItemAddonContext.LauncherItemId, LauncherItemAddonContext.Storage.Persistence, file);
+                            }
+                        } catch (Exception ex) {
+                            Logger.LogError(ex, ex.Message);
+                            MessageBox.Show(ex.ToString());
+                        }
+                    }
+                );
+            }
+        }
 
         #endregion
     }

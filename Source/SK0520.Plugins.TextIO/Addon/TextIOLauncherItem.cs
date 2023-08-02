@@ -3,17 +3,19 @@ using ContentTypeTextNet.Pe.Bridge.Plugin;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Addon;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Preferences;
 using ContentTypeTextNet.Pe.Embedded.Abstract;
+using SK0520.Plugins.TextIO.Models;
 using SK0520.Plugins.TextIO.ViewModels;
 using SK0520.Plugins.TextIO.Views;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SK0520.Plugins.TextIO.Addon
 {
-    internal class TextIOLauncherItem : LauncherItemExtensionBase
+    public class TextIOLauncherItem : LauncherItemExtensionBase
     {
         public TextIOLauncherItem(ILauncherItemExtensionCreateParameter parameter, IPluginInformation pluginInformation, PluginBase plugin)
             : base(parameter, pluginInformation)
@@ -24,6 +26,24 @@ namespace SK0520.Plugins.TextIO.Addon
         #region property
 
         private PluginBase Plugin { get; }
+
+        #endregion
+
+        #region function
+
+        private string ReadText(FileInfo file)
+        {
+            using var reader = file.OpenText();
+            return reader.ReadToEnd();
+        }
+
+        public void AddScriptFile(LauncherItemId launcherItemId, ILauncherItemAddonPersistence persistence, FileInfo file)
+        {
+            var source = ReadText(file);
+            var scriptLoader = new ScriptLoader();
+            var script = scriptLoader.LoadSource(source);
+
+        }
 
         #endregion
 

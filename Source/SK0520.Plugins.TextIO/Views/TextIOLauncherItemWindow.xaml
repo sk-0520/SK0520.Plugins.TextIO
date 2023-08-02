@@ -15,6 +15,7 @@
     
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:datacontext="clr-namespace:SK0520.Plugins.TextIO.ViewModels" d:DataContext="{d:DesignInstance Type=datacontext:TextIOLauncherItemViewModel}"
 >
     <Window.Resources>
         <system:Double x:Key="GridSplitter">3</system:Double>
@@ -81,7 +82,7 @@
                 </Grid.RowDefinitions>
 
                 <ToolBar Grid.Row="0">
-                    <Button>add</Button>
+                    <Button Command="{Binding AddScriptCommand}">add</Button>
                     <Button>delete</Button>
                     <Separator />
                     <Button>execute</Button>
