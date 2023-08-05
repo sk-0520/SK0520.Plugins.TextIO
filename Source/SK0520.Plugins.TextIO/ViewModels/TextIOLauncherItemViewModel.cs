@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using SK0520.Plugins.TextIO.Addon;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
         {
             Item = item;
             LauncherItemAddonContext = launcherItemAddonContext;
+            var heads = Item.GetScriptHeads(LauncherItemAddonContext.Storage.Persistence);
+            ScriptHeadCollection = new ObservableCollection<ScriptHeadViewModel>(heads.Select(a => new ScriptHeadViewModel(a, skeletonImplements, dispatcherWrapper, loggerFactory)));
         }
 
         #region property
@@ -42,6 +45,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
             get => this._isRunning;
             set => SetProperty(ref this._isRunning, value);
         }
+
+        public ObservableCollection<ScriptHeadViewModel> ScriptHeadCollection { get; }
 
         #endregion
 

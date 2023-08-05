@@ -19,6 +19,14 @@ namespace SK0520.Plugins.TextIO.Addon
 {
     internal class TextIOLauncherItem : LauncherItemExtensionBase
     {
+        #region define
+
+        private string ListKey = string.Empty;
+        private string HeadBaseKey = string.Empty;
+        private string BodyBaseKey = string.Empty;
+
+        #endregion
+
         public TextIOLauncherItem(ILauncherItemExtensionCreateParameter parameter, IPluginInformation pluginInformation, PluginBase plugin)
             : base(parameter, pluginInformation)
         {
@@ -33,36 +41,69 @@ namespace SK0520.Plugins.TextIO.Addon
 
         #region function
 
+        private string ToHeadKey(Guid scriptId)
+        {
+            return "H:" + scriptId.ToString("D");
+        }
+        private string ToBodyKey(Guid scriptId)
+        {
+            return "B:" + scriptId.ToString("D");
+        }
+
         private string ReadText(FileInfo file)
         {
             using var reader = file.OpenText();
             return reader.ReadToEnd();
         }
 
-        public void AddScriptFile(FileInfo file)
+        private ScriptList GetScriptList(ILauncherItemAddonPersistence persistence)
+        {
+            ScriptList list = new ScriptList();
+
+            if (persistence.Normal.TryGet(LauncherItemId, ListKey, out ScriptList? result))
+            {
+                list = result!;
+            }
+
+            return list;
+        }
+
+        public IEnumerable<ScriptHeadSetting> GetScriptHeads(ILauncherItemAddonPersistence persistence)
+        {
+            var scriptList = GetScriptList(persistence);
+            var result = new List<ScriptHeadSetting>(scriptList.ScriptIds.Count);
+
+            foreach (var scriptId in scriptList.ScriptIds)
+            {
+                if (persistence.Normal.TryGet(LauncherItemId, ToHeadKey(scriptId), out ScriptHeadSetting? head))
+                {
+                    result.Add(head!);
+                }
+            }
+
+            return result;
+        }
+
+        public ScriptSetting AddScriptFile(FileInfo file)
         {
             var source = ReadText(file);
             var scriptLoader = new ScriptLoader();
-            var script = scriptLoader.LoadSource(source);
+            var scriptSetting = scriptLoader.LoadSource(source);
 
             ContextWorker.RunLauncherItemAddon(c =>
             {
-                ScriptList? list = null;
-                if (!c.Storage.Persistence.Normal.TryGet(c.LauncherItemId, string.Empty, out list))
-                {
-                    list = new ScriptList();
-                }
-                Debug.Assert(list is not null);
+                var scriptList = GetScriptList(c.Storage.Persistence);
 
-                list.ScriptIds.Add(script.ScriptId);
+                scriptList.ScriptIds.Add(scriptSetting.ScriptId);
 
-                c.Storage.Persistence.Normal.Set(c.LauncherItemId, string.Empty, list);
-                c.Storage.Persistence.Normal.Set(c.LauncherItemId, "H:" + script.ScriptId.ToString("D"), script.Head);
-                c.Storage.Persistence.Normal.Set(c.LauncherItemId, "B:" + script.ScriptId.ToString("D"), script.Body);
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, ListKey, scriptList);
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, ToHeadKey(scriptSetting.ScriptId), scriptSetting.Head);
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, ToBodyKey(scriptSetting.ScriptId), scriptSetting.Body);
 
                 return true;
             });
 
+            return scriptSetting;
         }
 
         #endregion
@@ -88,6 +129,7 @@ namespace SK0520.Plugins.TextIO.Addon
         public override void Execute(string? argument, ICommandExecuteParameter commandExecuteParameter, ILauncherItemExtensionExecuteParameter launcherItemExtensionExecuteParameter, ILauncherItemAddonContext launcherItemAddonContext)
         {
             var viewModel = new TextIOLauncherItemViewModel(this, launcherItemAddonContext, SkeletonImplements, DispatcherWrapper, LoggerFactory);
+
             var view = new TextIOLauncherItemWindow()
             {
                 DataContext = viewModel,
@@ -96,7 +138,8 @@ namespace SK0520.Plugins.TextIO.Addon
             launcherItemExtensionExecuteParameter.ViewSupporter.RegisterWindow(
                 view,
                 () => !viewModel.IsRunning,
-                () => {
+                () =>
+                {
                     view.DataContext = null;
                     viewModel.Dispose();
                 }

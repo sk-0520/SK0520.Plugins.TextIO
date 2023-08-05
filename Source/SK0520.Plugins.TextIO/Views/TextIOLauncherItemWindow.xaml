@@ -88,7 +88,13 @@
                     <Button>execute</Button>
                 </ToolBar>
 
-                <ListBox Grid.Row="1" Margin="{StaticResource CommonThickness}" />
+                <ListBox Grid.Row="1" Margin="{StaticResource CommonThickness}" ItemsSource="{Binding ScriptHeadCollection}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
 
                 <GridSplitter Grid.Row="2" Height="{StaticResource GridSplitter}" />
 
