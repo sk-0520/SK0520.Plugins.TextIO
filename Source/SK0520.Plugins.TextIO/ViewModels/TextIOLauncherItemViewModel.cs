@@ -25,7 +25,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #endregion
 
-        public TextIOLauncherItemViewModel(TextIOLauncherItem item, ILauncherItemAddonContext launcherItemAddonContext, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
+        internal TextIOLauncherItemViewModel(TextIOLauncherItem item, ILauncherItemAddonContext launcherItemAddonContext, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(skeletonImplements, dispatcherWrapper, loggerFactory)
         {
             Item = item;

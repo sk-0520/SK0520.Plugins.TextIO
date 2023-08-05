@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace SK0520.Plugins.TextIO.Addon
 {
-    public class TextIOLauncherItem : LauncherItemExtensionBase
+    internal class TextIOLauncherItem : LauncherItemExtensionBase
     {
         public TextIOLauncherItem(ILauncherItemExtensionCreateParameter parameter, IPluginInformation pluginInformation, PluginBase plugin)
             : base(parameter, pluginInformation)
@@ -59,6 +59,8 @@ namespace SK0520.Plugins.TextIO.Addon
                 c.Storage.Persistence.Normal.Set(c.LauncherItemId, string.Empty, list);
                 c.Storage.Persistence.Normal.Set(c.LauncherItemId, "H:" + script.ScriptId.ToString("D"), script.Head);
                 c.Storage.Persistence.Normal.Set(c.LauncherItemId, "B:" + script.ScriptId.ToString("D"), script.Body);
+
+                return true;
             });
 
         }
