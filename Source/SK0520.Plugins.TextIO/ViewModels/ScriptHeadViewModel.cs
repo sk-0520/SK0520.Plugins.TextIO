@@ -28,6 +28,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         public ObservableCollection<ScriptParameterViewModel> ParameterCollection { get; }
 
+        public bool ParameterIsEmpty => ParameterCollection.Count == 0;
+
         #endregion
     }
 }

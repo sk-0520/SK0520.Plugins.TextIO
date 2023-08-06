@@ -78,27 +78,49 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="2*" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <ToolBar Grid.Row="0">
+                    <Label Style="{StaticResource ToolbarTitle}">source</Label>
                     <Button Command="{Binding AddScriptCommand}">add</Button>
-                    <Button>delete</Button>
                     <Separator />
-                    <Button>execute</Button>
+                    <Button>U</Button>
+                    <Button>D</Button>
                 </ToolBar>
 
                 <ListBox Grid.Row="1" Margin="{StaticResource CommonThickness}" ItemsSource="{Binding ScriptHeadCollection}">
+                    <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Header="Delete" />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+
                 </ListBox>
 
-                <GridSplitter Grid.Row="2" Height="{StaticResource GridSplitter}" />
+                <GroupBox 
+                    Grid.Row="2"
+                    Margin="{StaticResource CommonThickness}"
+                    Header="params"
+                >
+                    <TextBlock>params UI</TextBlock>
+                </GroupBox>
 
-                <GroupBox Grid.Row="3" Margin="{StaticResource CommonThickness}" Header="params" />
+                <ToolBar Grid.Row="3">
+                    <Label Style="{StaticResource ToolbarTitle}">module</Label>
+                    <Button>execute</Button>
+                </ToolBar>
             </Grid>
 
             <GridSplitter Grid.Column="3" Width="{StaticResource GridSplitter}" />
