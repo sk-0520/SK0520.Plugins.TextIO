@@ -29,12 +29,12 @@
             <Setter Property="Options">
                 <Setter.Value>
                     <sharpdevelop_avalonedit:TextEditorOptions
-                      EnableEmailHyperlinks="False"
-                      EnableHyperlinks="False"
-                      EnableVirtualSpace="False"
-                      ShowEndOfLine="True"
-                      ShowSpaces="True"
-                      ShowTabs="True"
+                        EnableEmailHyperlinks="False"
+                        EnableHyperlinks="False"
+                        EnableVirtualSpace="False"
+                        ShowEndOfLine="True"
+                        ShowSpaces="True"
+                        ShowTabs="True"
                     />
                 </Setter.Value>
             </Setter>
@@ -89,13 +89,18 @@
                     <Button>D</Button>
                 </ToolBar>
 
-                <ListBox Grid.Row="1" Margin="{StaticResource CommonThickness}" ItemsSource="{Binding ScriptHeadCollection}">
+                <ListBox 
+                    Grid.Row="1" 
+                    Margin="{StaticResource CommonThickness}" 
+                    ItemsSource="{Binding ScriptHeadCollection}"
+                    SelectedItem="{Binding SelectedScriptHead}"
+                >
                     <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="ContextMenu">
                             <Setter.Value>
                                 <ContextMenu>
-                                    <MenuItem Header="Delete" />
+                                    <MenuItem Header="削除" />
                                 </ContextMenu>
                             </Setter.Value>
                         </Setter>

@@ -1,8 +1,10 @@
-﻿using SK0520.Plugins.TextIO.Models.Data;
+﻿using Microsoft.Extensions.Logging;
+using SK0520.Plugins.TextIO.Models.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +12,23 @@ namespace SK0520.Plugins.TextIO.Models
 {
     public class ScriptLoader
     {
+        #region define
+
+        private const string HashKind = "SHA512";
+
+        #endregion
+
+        public ScriptLoader(ILoggerFactory loggerFactory)
+        {
+            Logger = loggerFactory.CreateLogger<ScriptLoader>();
+        }
+
+        #region property
+
+        private ILogger Logger { get; }
+
+        #endregion
+
         #region function
 
         public ScriptSetting LoadSource(string source)
@@ -56,6 +75,8 @@ namespace SK0520.Plugins.TextIO.Models
 
             var parameters = new List<ScriptParameter>();
 
+            var metaUpdateUri = string.Empty;
+
             foreach (var rawHeader in rawHeaders)
             {
                 if (name is null)
@@ -88,6 +109,19 @@ namespace SK0520.Plugins.TextIO.Models
                                 ));
                             }
                             break;
+
+                        case "update":
+                            {
+                                if(Uri.TryCreate(rawHeader.value, UriKind.Absolute, out var result))
+                                {
+                                    metaUpdateUri = result.ToString();
+                                }
+                            }
+                            break;
+
+                        default:
+                            Logger.LogInformation("ignore: {key} {value}", rawHeader.key, rawHeader.value);
+                            break;
                     }
                 }
             }
@@ -100,8 +134,31 @@ namespace SK0520.Plugins.TextIO.Models
             var scriptId = Guid.NewGuid();
             var head = new ScriptHeadSetting(scriptId, name, parameters);
             var body = new ScriptBodySetting(scriptId, bodySource);
+            var hash = ComputeHash(source, HashKind);
+            var timestamp = DateTime.UtcNow;
+            var meta = new ScriptMetaSetting()
+            {
+                ScriptId = scriptId,
+                CreatedTimestamp = timestamp,
+                UpdatedTimestamp = timestamp,
+                UpdateUri = metaUpdateUri,
+                HashKind = hash.HashKind,
+                HashValue = hash.HashValue,
+            };
 
-            return new ScriptSetting(head, body);
+            return new ScriptSetting(head, meta, body);
+        }
+
+        public IHashData ComputeHash(string source, string hashKind = HashKind)
+        {
+            var binary = Encoding.UTF8.GetBytes(source);
+            using var hashStream = new MemoryStream(binary);
+
+            using var hashAlgorithm = SHA512.Create();
+
+            var hashValue = hashAlgorithm.ComputeHash(hashStream);
+
+            return new HashData(hashKind, hashValue);
         }
 
         #endregion

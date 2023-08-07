@@ -21,6 +21,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
         #region variable
 
         private bool _isRunning = false;
+        private ScriptHeadViewModel? _scriptHead;
 
         private ICommand? _addScriptCommand;
 
@@ -47,6 +48,11 @@ namespace SK0520.Plugins.TextIO.ViewModels
         }
 
         public ObservableCollection<ScriptHeadViewModel> ScriptHeadCollection { get; }
+        public ScriptHeadViewModel? SelectedScriptHead
+        {
+            get => this._scriptHead;
+            set => SetProperty(ref this._scriptHead, value);
+        }
 
         #endregion
 

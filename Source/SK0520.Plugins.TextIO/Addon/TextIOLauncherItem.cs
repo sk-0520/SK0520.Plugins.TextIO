@@ -41,14 +41,16 @@ namespace SK0520.Plugins.TextIO.Addon
 
         #region function
 
-        private string ToHeadKey(Guid scriptId)
+        private string ToKey(string type, Guid scriptId)
         {
-            return "H:" + scriptId.ToString("D");
+            return type + ":" + scriptId.ToString("D");
         }
-        private string ToBodyKey(Guid scriptId)
-        {
-            return "B:" + scriptId.ToString("D");
-        }
+
+        private string ToHeadKey(Guid scriptId) => ToKey("H", scriptId);
+
+        private string ToMetaKey(Guid scriptId) => ToKey("M", scriptId);
+
+        private string ToBodyKey(Guid scriptId) => ToKey("B", scriptId);
 
         private string ReadText(FileInfo file)
         {
@@ -87,7 +89,7 @@ namespace SK0520.Plugins.TextIO.Addon
         public ScriptSetting AddScriptFile(FileInfo file)
         {
             var source = ReadText(file);
-            var scriptLoader = new ScriptLoader();
+            var scriptLoader = new ScriptLoader(LoggerFactory);
             var scriptSetting = scriptLoader.LoadSource(source);
 
             ContextWorker.RunLauncherItemAddon(c =>
@@ -98,6 +100,7 @@ namespace SK0520.Plugins.TextIO.Addon
 
                 c.Storage.Persistence.Normal.Set(c.LauncherItemId, ListKey, scriptList);
                 c.Storage.Persistence.Normal.Set(c.LauncherItemId, ToHeadKey(scriptSetting.ScriptId), scriptSetting.Head);
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, ToMetaKey(scriptSetting.ScriptId), scriptSetting.Meta);
                 c.Storage.Persistence.Normal.Set(c.LauncherItemId, ToBodyKey(scriptSetting.ScriptId), scriptSetting.Body);
 
                 return true;
