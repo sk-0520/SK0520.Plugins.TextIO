@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SK0520.Plugins.TextIO.Models;
 using SK0520.Plugins.TextIO.Models.Data;
 using System;
@@ -15,7 +16,7 @@ namespace SK0520.Plugins.TextIO.Test.Models
         [TestMethod]
         public void LoadSourceTest_Throw()
         {
-            var scriptLoader = new ScriptLoader();
+            var scriptLoader = new ScriptLoader(NullLoggerFactory.Instance);
 
             var actual1 = Assert.ThrowsException<ArgumentException>(() => scriptLoader.LoadSource(""));
             Assert.AreEqual("/**", actual1.Message);
@@ -27,7 +28,7 @@ namespace SK0520.Plugins.TextIO.Test.Models
         [TestMethod]
         public void LoadSourceTest()
         {
-            var scriptLoader = new ScriptLoader();
+            var scriptLoader = new ScriptLoader(NullLoggerFactory.Instance);
 
             var actual1 = scriptLoader.LoadSource(@"/**
             * @name: NAME
