@@ -100,8 +100,16 @@ namespace SK0520.Plugins.TextIO.ViewModels
                 return this._removeScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
                     o =>
                     {
-                        Item.RemoveScript(o.ScriptId);
-                        ScriptHeadCollection.Remove(o);
+                        try
+                        {
+                            Item.RemoveScript(o.ScriptId);
+                            ScriptHeadCollection.Remove(o);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogError(ex, ex.Message);
+                            MessageBox.Show(ex.ToString());
+                        }
                     },
                     o => o is not null
                 );
