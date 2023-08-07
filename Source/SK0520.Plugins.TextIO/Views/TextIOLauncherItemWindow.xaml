@@ -49,11 +49,11 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="35*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="2*" MinWidth="120" MaxWidth="300" />
+                <ColumnDefinition Width="30*" MinWidth="120" MaxWidth="300" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="35*" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
@@ -87,6 +87,9 @@
                     <Separator />
                     <Button>U</Button>
                     <Button>D</Button>
+                    <Separator />
+                    <Button>U</Button>
+                    <Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">D</Button>
                 </ToolBar>
 
                 <ListBox 
@@ -95,17 +98,6 @@
                     ItemsSource="{Binding ScriptHeadCollection}"
                     SelectedItem="{Binding SelectedScriptHead}"
                 >
-                    <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="ContextMenu">
-                            <Setter.Value>
-                                <ContextMenu>
-                                    <MenuItem Header="削除" />
-                                </ContextMenu>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" />

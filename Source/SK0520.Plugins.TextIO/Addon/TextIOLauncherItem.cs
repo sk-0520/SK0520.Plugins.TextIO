@@ -109,6 +109,23 @@ namespace SK0520.Plugins.TextIO.Addon
             return scriptSetting;
         }
 
+        public void RemoveScript(Guid scriptId)
+        {
+            ContextWorker.RunLauncherItemAddon(c =>
+            {
+                var scriptList = GetScriptList(c.Storage.Persistence);
+
+                scriptList.ScriptIds.Remove(scriptId);
+
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, ListKey, scriptList);
+                c.Storage.Persistence.Normal.Delete(c.LauncherItemId, ToHeadKey(scriptId));
+                c.Storage.Persistence.Normal.Delete(c.LauncherItemId, ToMetaKey(scriptId));
+                c.Storage.Persistence.Normal.Delete(c.LauncherItemId, ToBodyKey(scriptId));
+
+                return true;
+            });
+        }
+
         #endregion
 
         #region LauncherItemExtensionBase
