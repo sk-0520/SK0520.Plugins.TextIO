@@ -102,7 +102,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
                     {
                         try
                         {
-                            o.ScriptUpdateStatus = ScriptUpdateStatus.Success;
+                            o.ScriptUpdateStatus = ScriptUpdateStatus.Running;
+
                             var meta = Item.GetMeta(o.ScriptId);
                             if(!Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var uri))
                             {
@@ -114,6 +115,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             var scriptSetting = await Item.UpdateScriptIfNewVersionAsync(meta, uri);
                             if(scriptSetting is null)
                             {
+                                o.ScriptUpdateStatus = ScriptUpdateStatus.None;
                                 Logger.LogInformation("[{PLUGIN}:{SCRIPT}] アップデート対象なし", Item.LauncherItemId, o.ScriptId);
                                 return;
                             }
@@ -127,6 +129,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                                     ScriptHeadCollection.RemoveAt(index);
                                     ScriptHeadCollection.Insert(index, newHead);
                                     SelectedScriptHead = newHead;
+                                    newHead.ScriptUpdateStatus = ScriptUpdateStatus.Success;
                                 });
                             }
                         }
