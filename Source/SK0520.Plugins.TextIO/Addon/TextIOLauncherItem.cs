@@ -203,6 +203,27 @@ namespace SK0520.Plugins.TextIO.Addon
             return result;
         }
 
+        public void ChangeOrder(Guid scriptId, bool isUp)
+        {
+            ContextWorker.RunLauncherItemAddon(c =>
+            {
+                var list = GetScriptList(c.Storage.Persistence);
+                var index = list.ScriptIds.IndexOf(scriptId);
+                list.ScriptIds.RemoveAt(index);
+                if (isUp)
+                {
+                    list.ScriptIds.Insert(index - 1, scriptId);
+                }
+                else
+                {
+                    list.ScriptIds.Insert(index + 1, scriptId);
+                }
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, ListKey, list);
+
+                return true;
+            });
+        }
+
         #endregion
 
         #region LauncherItemExtensionBase

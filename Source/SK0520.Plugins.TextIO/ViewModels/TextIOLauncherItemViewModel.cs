@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace SK0520.Plugins.TextIO.ViewModels
@@ -27,6 +28,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         private ICommand? _addScriptCommand;
         private ICommand? _updateScriptCommand;
+        private ICommand? _moveUpScriptCommand;
+        private ICommand? _moveDownScriptCommand;
         private ICommand? _removeScriptCommand;
 
         #endregion
@@ -145,6 +148,22 @@ namespace SK0520.Plugins.TextIO.ViewModels
             );
         }
 
+        public ICommand MoveUpScriptCommand
+        {
+            get => this._moveUpScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
+                o => MoveScript(true, o),
+                o => o is not null && ScriptHeadCollection.IndexOf(o) != 0
+            );
+        }
+
+        public ICommand MoveDownScriptCommand
+        {
+            get => this._moveDownScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
+                o => MoveScript(false, o),
+                o => o is not null && ScriptHeadCollection.IndexOf(o) != ScriptHeadCollection.Count - 1
+            );
+        }
+
         public ICommand RemoveScriptCommand
         {
             get => this._removeScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
@@ -168,6 +187,23 @@ namespace SK0520.Plugins.TextIO.ViewModels
         #endregion
 
         #region function
+
+        private void MoveScript(bool isUp, ScriptHeadViewModel head)
+        {
+            var index = ScriptHeadCollection.IndexOf(head);
+            Item.ChangeOrder(head.ScriptId, isUp);
+
+            ScriptHeadCollection.RemoveAt(index);
+            if (isUp)
+            {
+                ScriptHeadCollection.Insert(index - 1, head);
+            }
+            else
+            {
+                ScriptHeadCollection.Insert(index + 1, head);
+            }
+            SelectedScriptHead = head;
+        }
 
         #endregion
     }

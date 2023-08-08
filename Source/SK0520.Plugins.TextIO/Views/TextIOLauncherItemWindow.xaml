@@ -86,8 +86,8 @@
                     <Button Command="{Binding AddScriptCommand}">add</Button>
                     <Button Command="{Binding UpdateScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">update</Button>
                     <Separator />
-                    <Button>U</Button>
-                    <Button>D</Button>
+                    <Button Command="{Binding MoveUpScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">U</Button>
+                    <Button Command="{Binding MoveDownScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">D</Button>
                     <Separator />
                     <Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">remove</Button>
                 </ToolBar>
