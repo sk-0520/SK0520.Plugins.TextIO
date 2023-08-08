@@ -13,6 +13,12 @@ namespace SK0520.Plugins.TextIO.ViewModels
 {
     public class ScriptHeadViewModel: ViewModelSkeleton, IScriptId
     {
+        #region variable
+
+        private ScriptUpdateStatus _scriptUpdateStatus;
+
+        #endregion
+
         public ScriptHeadViewModel(ScriptHeadSetting headSetting, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory) 
             :base(skeletonImplements, dispatcherWrapper, loggerFactory)
         {
@@ -29,6 +35,12 @@ namespace SK0520.Plugins.TextIO.ViewModels
         public ObservableCollection<ScriptParameterViewModel> ParameterCollection { get; }
 
         public bool ParameterIsEmpty => ParameterCollection.Count == 0;
+
+        public ScriptUpdateStatus ScriptUpdateStatus
+        {
+            get => this._scriptUpdateStatus;
+            set => SetProperty(ref this._scriptUpdateStatus, value);
+        }
 
         #endregion
 

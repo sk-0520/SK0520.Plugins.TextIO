@@ -4,6 +4,7 @@ using ContentTypeTextNet.Pe.Bridge.ViewModels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using SK0520.Plugins.TextIO.Addon;
+using SK0520.Plugins.TextIO.Models.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,9 +22,11 @@ namespace SK0520.Plugins.TextIO.ViewModels
         #region variable
 
         private bool _isRunning = false;
+
         private ScriptHeadViewModel? _scriptHead;
 
         private ICommand? _addScriptCommand;
+        private ICommand? _updateScriptCommand;
         private ICommand? _removeScriptCommand;
 
         #endregion
@@ -63,57 +66,100 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         public ICommand AddScriptCommand
         {
-            get
-            {
-                return this._addScriptCommand ??= CreateCommand(
-                    () =>
+            get => this._addScriptCommand ??= CreateCommand(
+                () =>
+                {
+                    try
+                    {
+                        var dialog = new OpenFileDialog()
+                        {
+                            DefaultExt = ".js",
+                            Filter = "JavaScript (.js)|*.js",
+                        };
+                        if (dialog.ShowDialog().GetValueOrDefault())
+                        {
+                            var filePath = dialog.FileName;
+                            var file = new FileInfo(filePath);
+                            var script = Item.AddScriptFile(file);
+                            ScriptHeadCollection.Add(new ScriptHeadViewModel(script.Head, Implements, DispatcherWrapper, LoggerFactory));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex, ex.Message);
+                        MessageBox.Show(ex.ToString());
+                    }
+                }
+            );
+        }
+
+        public ICommand UpdateScriptCommand
+        {
+            get => this._updateScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
+                o =>
+                {
+                    Task.Run(async () =>
                     {
                         try
                         {
-                            var dialog = new OpenFileDialog()
+                            o.ScriptUpdateStatus = ScriptUpdateStatus.Success;
+                            var meta = Item.GetMeta(o.ScriptId);
+                            if(!Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var uri))
                             {
-                                DefaultExt = ".js",
-                                Filter = "JavaScript (.js)|*.js",
-                            };
-                            if (dialog.ShowDialog().GetValueOrDefault())
+                                o.ScriptUpdateStatus = ScriptUpdateStatus.None;
+                                Logger.LogInformation("[{PLUGIN}:{SCRIPT}] アップデート対象なし", Item.LauncherItemId, o.ScriptId);
+                                return;
+                            }
+
+                            var scriptSetting = await Item.UpdateScriptIfNewVersionAsync(meta, uri);
+                            if(scriptSetting is null)
                             {
-                                var filePath = dialog.FileName;
-                                var file = new FileInfo(filePath);
-                                var script = Item.AddScriptFile(file);
-                                ScriptHeadCollection.Add(new ScriptHeadViewModel(script.Head, Implements, DispatcherWrapper, LoggerFactory));
+                                Logger.LogInformation("[{PLUGIN}:{SCRIPT}] アップデート対象なし", Item.LauncherItemId, o.ScriptId);
+                                return;
+                            }
+                            Item.UpdateScript(scriptSetting);
+                            var index = ScriptHeadCollection.IndexOf(o);
+                            if(index!=-1)
+                            {
+                                await DispatcherWrapper.BeginAsync(() =>
+                                {
+                                    var newHead = new ScriptHeadViewModel(scriptSetting.Head, Implements, DispatcherWrapper, LoggerFactory);
+                                    ScriptHeadCollection.RemoveAt(index);
+                                    ScriptHeadCollection.Insert(index, newHead);
+                                    SelectedScriptHead = newHead;
+                                });
                             }
                         }
                         catch (Exception ex)
                         {
+                            o.ScriptUpdateStatus = ScriptUpdateStatus.Failure;
                             Logger.LogError(ex, ex.Message);
                             MessageBox.Show(ex.ToString());
                         }
-                    }
-                );
-            }
+                    });
+                },
+                o => o is not null && o.ScriptUpdateStatus != ScriptUpdateStatus.Running
+            );
         }
 
         public ICommand RemoveScriptCommand
         {
-            get
-            {
-                return this._removeScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
-                    o =>
+            get => this._removeScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
+                o =>
+                {
+                    try
                     {
-                        try
-                        {
-                            Item.RemoveScript(o.ScriptId);
-                            ScriptHeadCollection.Remove(o);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.LogError(ex, ex.Message);
-                            MessageBox.Show(ex.ToString());
-                        }
-                    },
-                    o => o is not null
-                );
-            }
+                        Item.RemoveScript(o.ScriptId);
+                        ScriptHeadCollection.Remove(o);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex, ex.Message);
+                        MessageBox.Show(ex.ToString());
+                    }
+                },
+                o => o is not null
+            );
         }
 
         #endregion

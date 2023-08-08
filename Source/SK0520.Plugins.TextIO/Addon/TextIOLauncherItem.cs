@@ -1,8 +1,11 @@
-﻿using ContentTypeTextNet.Pe.Bridge.Models.Data;
+﻿using ContentTypeTextNet.Pe.Bridge.Models;
+using ContentTypeTextNet.Pe.Bridge.Models.Data;
 using ContentTypeTextNet.Pe.Bridge.Plugin;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Addon;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Preferences;
 using ContentTypeTextNet.Pe.Embedded.Abstract;
+using Jint.Native;
+using Microsoft.Extensions.Logging;
 using SK0520.Plugins.TextIO.Models;
 using SK0520.Plugins.TextIO.Models.Data;
 using SK0520.Plugins.TextIO.ViewModels;
@@ -86,6 +89,24 @@ namespace SK0520.Plugins.TextIO.Addon
             return result;
         }
 
+        public ScriptMetaSetting GetMeta(Guid scriptId)
+        {
+            ScriptMetaSetting? result = null;
+
+            ContextWorker.RunLauncherItemAddon(c =>
+            {
+                c.Storage.Persistence.Normal.TryGet<ScriptMetaSetting?>(c.LauncherItemId, ToMetaKey(scriptId), out result);
+                return false;
+            });
+
+            if (result is null)
+            {
+                throw new KeyNotFoundException(scriptId.ToString());
+            }
+
+            return result;
+        }
+
         public ScriptSetting AddScriptFile(FileInfo file)
         {
             var source = ReadText(file);
@@ -109,6 +130,18 @@ namespace SK0520.Plugins.TextIO.Addon
             return scriptSetting;
         }
 
+        public void UpdateScript(ScriptSetting scriptSetting)
+        {
+            ContextWorker.RunLauncherItemAddon(c =>
+            {
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, ToHeadKey(scriptSetting.ScriptId), scriptSetting.Head);
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, ToMetaKey(scriptSetting.ScriptId), scriptSetting.Meta);
+                c.Storage.Persistence.Normal.Set(c.LauncherItemId, ToBodyKey(scriptSetting.ScriptId), scriptSetting.Body);
+
+                return true;
+            });
+        }
+
         public void RemoveScript(Guid scriptId)
         {
             ContextWorker.RunLauncherItemAddon(c =>
@@ -124,6 +157,50 @@ namespace SK0520.Plugins.TextIO.Addon
 
                 return true;
             });
+        }
+
+        public async Task<ScriptSetting?> UpdateScriptIfNewVersionAsync(ScriptMetaSetting meta, Uri uri)
+        {
+            string source;
+            if (uri.IsFile)
+            {
+                Logger.LogInformation("[{SCRIPT}] アップデート対象-ファイル: {TARGET}", meta.ScriptId, uri);
+                source = await File.ReadAllTextAsync(uri.AbsolutePath);
+            }
+            else
+            {
+                Logger.LogInformation("[{SCRIPT}] アップデート対象-インターネット: {TARGET}", meta.ScriptId, uri);
+                using var ua = HttpUserAgentFactory.CreateUserAgent();
+                source = await ua.GetStringAsync(uri);
+            }
+
+            var scriptLoader = new ScriptLoader(LoggerFactory);
+
+            var sourceHash = scriptLoader.ComputeHash(source);
+            if (meta.HashKind == sourceHash.HashKind && meta.HashValue.SequenceEqual(sourceHash.HashValue))
+            {
+                Logger.LogInformation("[{SCRIPT}] 同一ハッシュ: <{KIND}> {VALUE}", meta.ScriptId, meta.HashKind, meta.HashValue);
+                return null;
+            }
+
+            var scriptSetting = scriptLoader.LoadSource(source);
+            var result = new ScriptSetting(
+                scriptSetting.Head with
+                {
+                    ScriptId = meta.ScriptId,
+                },
+                scriptSetting.Meta with
+                {
+                    ScriptId = meta.ScriptId,
+                    CreatedTimestamp = meta.CreatedTimestamp,
+                },
+                scriptSetting.Body with
+                {
+                    ScriptId = meta.ScriptId,
+                }
+            );
+
+            return result;
         }
 
         #endregion

@@ -84,12 +84,12 @@
                 <ToolBar Grid.Row="0">
                     <Label Style="{StaticResource ToolbarTitle}">source</Label>
                     <Button Command="{Binding AddScriptCommand}">add</Button>
+                    <Button Command="{Binding UpdateScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">update</Button>
                     <Separator />
                     <Button>U</Button>
                     <Button>D</Button>
                     <Separator />
-                    <Button>U</Button>
-                    <Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">D</Button>
+                    <Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">remove</Button>
                 </ToolBar>
 
                 <ListBox 
