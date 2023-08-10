@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.CodeAnalysis.Options;
+using Microsoft.Extensions.Logging;
 using SK0520.Plugins.TextIO.Models.Data;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,20 @@ namespace SK0520.Plugins.TextIO.Models
         #endregion
 
         #region function
+
+        private bool GetRequired(IEnumerable<string> options)
+        {
+            var require = options
+                .Select(a => a.Split('=', 2))
+                .FirstOrDefault(a => a[0] == "require")
+            ;
+            if(require is null)
+            {
+                return false;
+            }
+
+            return Convert.ToBoolean(require[1]);
+        }
 
         public ScriptSetting LoadSource(string source)
         {
@@ -97,7 +112,7 @@ namespace SK0520.Plugins.TextIO.Models
                                 var value = optionValue[1];
                                 var options = option.Split('#').Select(a => a.Trim()).ToArray();
                                 var paramName = options[0];
-                                var required = options[1] switch { "!" => true, "?" => false, _ => throw new NotImplementedException() };
+                                var required = GetRequired(options.Skip(1));
                                 if (parameters.Any(a => a.Name == paramName))
                                 {
                                     throw new Exception($"name: {paramName}");

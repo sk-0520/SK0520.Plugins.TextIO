@@ -32,10 +32,11 @@ namespace SK0520.Plugins.TextIO.Test.Models
 
             var actual1 = scriptLoader.LoadSource(@"/**
             * @name: NAME
-            * @parameters:name1#!:string
-            * @parameters:name2#?:integer
-            @parameters:name3#!:decimal
-            @parameters:name4#?:datetime
+            * @parameters:name1#require=true:string
+            * @parameters:name2#require=false:integer
+            @parameters:name3#require=true:decimal
+            @parameters:name4#require=false:datetime
+            * @parameters:name5#require=true:boolean
             */
             BODY
             ");
@@ -57,6 +58,10 @@ namespace SK0520.Plugins.TextIO.Test.Models
             Assert.AreEqual("name4", actual1.Head.Parameters[3].Name);
             Assert.IsFalse(actual1.Head.Parameters[3].Required);
             Assert.AreEqual(ScriptParameterKind.DateTime, actual1.Head.Parameters[3].Kind);
+
+            Assert.AreEqual("name5", actual1.Head.Parameters[4].Name);
+            Assert.IsTrue(actual1.Head.Parameters[4].Required);
+            Assert.AreEqual(ScriptParameterKind.Boolean, actual1.Head.Parameters[4].Kind);
 
             Assert.AreEqual("BODY", actual1.Body.Source);
         }

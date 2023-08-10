@@ -5,6 +5,8 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
   
     xmlns:sharpdevelop_avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+    
+    xmlns:views_conveter="clr-namespace:SK0520.Plugins.TextIO.Views.Converter"
 
     Title="TextIOLauncherItemWindow" 
     Height="450" 
@@ -23,6 +25,7 @@
         <system:Double x:Key="GridSplitter">3</system:Double>
         <Thickness x:Key="CommonThickness">3</Thickness>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <views_conveter:RadioButtonNegativeConverter x:Key="RadioButtonNegativeConverter" />
         <Style x:Key="ToolbarTitle" TargetType="Label">
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
@@ -129,6 +132,15 @@
                     </GroupBox.Style>
                     <ItemsControl ItemsSource="{Binding SelectedScriptHead.ParameterCollection}">
                         <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type viewmodels:BooleanScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Name}" />
+                                    <WrapPanel Orientation="Horizontal">
+                                        <RadioButton IsChecked="{Binding Value, Converter={StaticResource RadioButtonNegativeConverter}}">OFF</RadioButton>
+                                        <RadioButton IsChecked="{Binding Value}">ON</RadioButton>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </DataTemplate>
                             <DataTemplate DataType="{x:Type viewmodels:StringScriptParameterViewModel}">
                                 <StackPanel>
                                     <Label Content="{Binding Name}" />

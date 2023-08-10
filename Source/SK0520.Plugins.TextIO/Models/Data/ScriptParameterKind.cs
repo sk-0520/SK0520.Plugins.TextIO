@@ -9,6 +9,7 @@ namespace SK0520.Plugins.TextIO.Models.Data
     public enum ScriptParameterKind
     {
         Unknown,
+        Boolean,
         String,
         Integer,
         Decimal,

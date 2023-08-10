@@ -35,6 +35,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
         {
             return parameter.Kind switch
             {
+                ScriptParameterKind.Boolean => new BooleanScriptParameterViewModel(parameter, SkeletonImplements, DispatcherWrapper, LoggerFactory),
                 ScriptParameterKind.String => new StringScriptParameterViewModel(parameter, SkeletonImplements, DispatcherWrapper, LoggerFactory),
                 ScriptParameterKind.Integer => new IntegerScriptParameterViewModel(parameter, SkeletonImplements, DispatcherWrapper, LoggerFactory),
                 ScriptParameterKind.Decimal => new DecimalScriptParameterViewModel(parameter, SkeletonImplements, DispatcherWrapper, LoggerFactory),
@@ -89,6 +90,12 @@ namespace SK0520.Plugins.TextIO.ViewModels
         #endregion
     }
 
+    public sealed class BooleanScriptParameterViewModel : ScriptParameterViewModelBase<bool>
+    {
+        public BooleanScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
+            : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
+        { }
+    }
     public sealed class StringScriptParameterViewModel : ScriptParameterViewModelBase<string>
     {
         public StringScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
