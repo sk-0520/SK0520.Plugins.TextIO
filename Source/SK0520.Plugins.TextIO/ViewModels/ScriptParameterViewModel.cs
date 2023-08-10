@@ -31,7 +31,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #region function
 
-        public ScriptParameterViewModel Create(ScriptParameter parameter)
+        public ScriptParameterViewModelBase Create(ScriptParameter parameter)
         {
             return parameter.Kind switch
             {
@@ -46,9 +46,9 @@ namespace SK0520.Plugins.TextIO.ViewModels
         #endregion
     }
 
-    public abstract class ScriptParameterViewModel : ViewModelSkeleton
+    public abstract class ScriptParameterViewModelBase : ViewModelSkeleton
     {
-        protected ScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
+        protected ScriptParameterViewModelBase(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(skeletonImplements, dispatcherWrapper, loggerFactory)
         {
             Parameter = parameter;
@@ -58,12 +58,14 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         protected ScriptParameter Parameter { get; }
 
+        public string Name => Parameter.Name;
+
         public bool IsRequired => Parameter.Required;
 
         #endregion
     }
 
-    public abstract class ScriptParameterViewModelBase<T> : ScriptParameterViewModel
+    public abstract class ScriptParameterViewModelBase<T> : ScriptParameterViewModelBase
     {
         #region variable
 
@@ -87,29 +89,31 @@ namespace SK0520.Plugins.TextIO.ViewModels
         #endregion
     }
 
-    public sealed class StringScriptParameterViewModel : ScriptParameterViewModel
+    public sealed class StringScriptParameterViewModel : ScriptParameterViewModelBase<string>
     {
         public StringScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
         { }
     }
-    public sealed class IntegerScriptParameterViewModel : ScriptParameterViewModel
+    public sealed class IntegerScriptParameterViewModel : ScriptParameterViewModelBase<int>
     {
         public IntegerScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
         { }
     }
 
-    public sealed class DecimalScriptParameterViewModel : ScriptParameterViewModel
+    public sealed class DecimalScriptParameterViewModel : ScriptParameterViewModelBase<decimal>
     {
         public DecimalScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
         { }
     }
-    public sealed class DateTimeScriptParameterViewModel : ScriptParameterViewModel
+    public sealed class DateTimeScriptParameterViewModel : ScriptParameterViewModelBase<DateTime>
     {
         public DateTimeScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
-        { }
+        {
+            Value = DateTime.Now;
+        }
     }
 }

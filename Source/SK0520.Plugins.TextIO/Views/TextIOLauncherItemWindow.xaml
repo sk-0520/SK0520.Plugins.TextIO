@@ -13,6 +13,8 @@
     ResizeMode="CanResizeWithGrip"
     Topmost="{Binding IsChecked, ElementName=topmost}"
     
+    xmlns:viewmodels="clr-namespace:SK0520.Plugins.TextIO.ViewModels"
+    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:datacontext="clr-namespace:SK0520.Plugins.TextIO.ViewModels" d:DataContext="{d:DesignInstance Type=datacontext:TextIOLauncherItemViewModel}"
@@ -77,7 +79,7 @@
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -125,7 +127,46 @@
                             <Setter Property="Visibility" Value="Collapsed" />
                         </Style>
                     </GroupBox.Style>
-                    <TextBlock>params UI</TextBlock>
+                    <ItemsControl ItemsSource="{Binding SelectedScriptHead.ParameterCollection}">
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type viewmodels:StringScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Name}" />
+                                    <TextBox Text="{Binding Value}" />
+                                </StackPanel>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:IntegerScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Name}" />
+                                    <TextBox Text="{Binding Value}" />
+                                </StackPanel>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:DecimalScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Name}" />
+                                    <TextBox Text="{Binding Value}" />
+                                </StackPanel>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:DateTimeScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Name}" />
+                                    <DatePicker SelectedDate="{Binding Value}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <ScrollViewer>
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
                 </GroupBox>
 
                 <ToolBar Grid.Row="3">

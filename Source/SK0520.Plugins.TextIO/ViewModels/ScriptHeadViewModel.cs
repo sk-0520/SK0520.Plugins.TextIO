@@ -24,7 +24,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
         {
             HeadSetting = headSetting;
             var factory = new ScriptParameterViewModelFactory(skeletonImplements, dispatcherWrapper, loggerFactory);
-            ParameterCollection = new ObservableCollection<ScriptParameterViewModel>(HeadSetting.Parameters.Select(a => factory.Create(a)));
+            ParameterCollection = new ObservableCollection<ScriptParameterViewModelBase>(HeadSetting.Parameters.Select(a => factory.Create(a)));
         }
 
         #region property
@@ -33,7 +33,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         public string Name => HeadSetting.Name;
 
-        public ObservableCollection<ScriptParameterViewModel> ParameterCollection { get; }
+        public ObservableCollection<ScriptParameterViewModelBase> ParameterCollection { get; }
 
         public bool HasParameters => ParameterCollection.Any();
 
