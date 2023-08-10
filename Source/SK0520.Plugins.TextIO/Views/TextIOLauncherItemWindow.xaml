@@ -20,6 +20,7 @@
     <Window.Resources>
         <system:Double x:Key="GridSplitter">3</system:Double>
         <Thickness x:Key="CommonThickness">3</Thickness>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <Style x:Key="ToolbarTitle" TargetType="Label">
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
@@ -103,14 +104,27 @@
                             <TextBlock Text="{Binding Name}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
-
                 </ListBox>
 
-                <GroupBox 
+                <GroupBox
                     Grid.Row="2"
                     Margin="{StaticResource CommonThickness}"
                     Header="params"
                 >
+                    <GroupBox.Style>
+                        <Style TargetType="GroupBox">
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsSelectedScriptHead}" Value="True" />
+                                        <Condition Binding="{Binding SelectedScriptHead.HasParameters}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Style>
+                    </GroupBox.Style>
                     <TextBlock>params UI</TextBlock>
                 </GroupBox>
 

@@ -23,7 +23,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
             :base(skeletonImplements, dispatcherWrapper, loggerFactory)
         {
             HeadSetting = headSetting;
-            ParameterCollection = new ObservableCollection<ScriptParameterViewModel>(HeadSetting.Parameters.Select(a => new ScriptParameterViewModel(a, skeletonImplements, dispatcherWrapper, loggerFactory)));
+            var factory = new ScriptParameterViewModelFactory(skeletonImplements, dispatcherWrapper, loggerFactory);
+            ParameterCollection = new ObservableCollection<ScriptParameterViewModel>(HeadSetting.Parameters.Select(a => factory.Create(a)));
         }
 
         #region property
@@ -34,7 +35,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         public ObservableCollection<ScriptParameterViewModel> ParameterCollection { get; }
 
-        public bool ParameterIsEmpty => ParameterCollection.Count == 0;
+        public bool HasParameters => ParameterCollection.Any();
 
         public ScriptUpdateStatus ScriptUpdateStatus
         {

@@ -60,8 +60,14 @@ namespace SK0520.Plugins.TextIO.ViewModels
         public ScriptHeadViewModel? SelectedScriptHead
         {
             get => this._scriptHead;
-            set => SetProperty(ref this._scriptHead, value);
+            set
+            {
+                SetProperty(ref this._scriptHead, value);
+                OnPropertyChanged(nameof(IsSelectedScriptHead));
+            }
         }
+
+        public bool IsSelectedScriptHead => SelectedScriptHead is not null;
 
         #endregion
 
