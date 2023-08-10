@@ -31,6 +31,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
         private ICommand? _moveUpScriptCommand;
         private ICommand? _moveDownScriptCommand;
         private ICommand? _removeScriptCommand;
+        private ICommand? _executeCommand;
 
         #endregion
 
@@ -114,7 +115,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             o.ScriptUpdateStatus = ScriptUpdateStatus.Running;
 
                             var meta = Item.GetMeta(o.ScriptId);
-                            if(!Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var uri))
+                            if (!Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var uri))
                             {
                                 o.ScriptUpdateStatus = ScriptUpdateStatus.None;
                                 Logger.LogInformation("[{PLUGIN}:{SCRIPT}] アップデート対象なし", Item.LauncherItemId, o.ScriptId);
@@ -122,7 +123,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             }
 
                             var scriptSetting = await Item.UpdateScriptIfNewVersionAsync(meta, uri);
-                            if(scriptSetting is null)
+                            if (scriptSetting is null)
                             {
                                 o.ScriptUpdateStatus = ScriptUpdateStatus.None;
                                 Logger.LogInformation("[{PLUGIN}:{SCRIPT}] アップデート対象なし", Item.LauncherItemId, o.ScriptId);
@@ -130,7 +131,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             }
                             Item.UpdateScript(scriptSetting);
                             var index = ScriptHeadCollection.IndexOf(o);
-                            if(index!=-1)
+                            if (index != -1)
                             {
                                 await DispatcherWrapper.BeginAsync(() =>
                                 {
@@ -189,6 +190,19 @@ namespace SK0520.Plugins.TextIO.ViewModels
                 o => o is not null
             );
         }
+
+        public ICommand ExecuteCommand => this._executeCommand ??= CreateCommand<ScriptHeadViewModel>(
+            o =>
+            {
+                if(SelectedScriptHead is null)
+                {
+                    Logger.LogDebug("対象スクリプト未選択");
+                    return;
+                }
+
+                Logger.LogInformation("[{SCRIPT}] ここから！", SelectedScriptHead.ScriptId);
+            }
+        );
 
         #endregion
 

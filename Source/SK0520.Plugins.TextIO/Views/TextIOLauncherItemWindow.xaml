@@ -190,7 +190,7 @@
 
                 <ToolBar Grid.Row="2">
                     <Label Style="{StaticResource ToolbarTitle}">module</Label>
-                    <Button>execute</Button>
+                    <Button Command="{Binding ExecuteCommand}">execute</Button>
                 </ToolBar>
             </Grid>
 
