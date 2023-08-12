@@ -1,24 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <RootNamespace>SK0520.Plugins.TextIO</RootNamespace>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<PropertyGroup>
+		<RootNamespace>SK0520.Plugins.TextIO</RootNamespace>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\Pe\Source\Pe\Pe.Embedded\**\*.cs" Exclude="..\Pe\Source\Pe\Pe.Embedded\obj\**\*.cs" />
-    <None Remove="Plugin.ico" />
-    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-    <PackageReference Include="Jint" Version="2.11.58">
-      <GeneratePathProperty></GeneratePathProperty>
-    </PackageReference>
-    <ProjectReference Include="..\Pe\Source\Pe\Pe.Bridge\Pe.Bridge.csproj">
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </ProjectReference>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\Pe\Source\Pe\Pe.Embedded\**\*.cs" Exclude="..\Pe\Source\Pe\Pe.Embedded\obj\**\*.cs" />
+		<None Remove="Plugin.ico" />
+		<PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+		<PackageReference Include="Jint" Version="2.11.58" />
+		<ProjectReference Include="..\Pe\Source\Pe\Pe.Bridge\Pe.Bridge.csproj">
+			<Private>false</Private>
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</ProjectReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="..\..\Plugin.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<Resource Include="..\..\Plugin.ico" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<EnableDynamicLoading>true</EnableDynamicLoading>
+	</PropertyGroup>
 </Project>
