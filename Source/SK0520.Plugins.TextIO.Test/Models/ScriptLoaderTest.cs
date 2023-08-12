@@ -32,8 +32,8 @@ namespace SK0520.Plugins.TextIO.Test.Models
 
             var actual1 = scriptLoader.LoadSource(@"/**
             * @name: NAME
-            * @parameters:name1#require=true:string
-            * @parameters:name2#require=false:integer
+            * @parameters:name1#display=なまえ1#require=true:string
+            * @parameters:name2#display=なまえ2#require=false:integer
             @parameters:name3#require=true:decimal
             @parameters:name4#require=false:datetime
             * @parameters:name5#require=true:boolean
@@ -43,25 +43,35 @@ namespace SK0520.Plugins.TextIO.Test.Models
 
             Assert.AreEqual("NAME", actual1.Head.Name);
 
-            Assert.AreEqual("name1", actual1.Head.Parameters[0].Name);
-            Assert.IsTrue(actual1.Head.Parameters[0].Required);
-            Assert.AreEqual(ScriptParameterKind.String, actual1.Head.Parameters[0].Kind);
+            int currentIndex = 0;
+            Assert.AreEqual("name1", actual1.Head.Parameters[currentIndex].Name);
+            Assert.AreEqual("なまえ1", actual1.Head.Parameters[currentIndex].Display);
+            Assert.IsTrue(actual1.Head.Parameters[currentIndex].Required);
+            Assert.AreEqual(ScriptParameterKind.String, actual1.Head.Parameters[currentIndex].Kind);
 
-            Assert.AreEqual("name2", actual1.Head.Parameters[1].Name);
-            Assert.IsFalse(actual1.Head.Parameters[1].Required);
-            Assert.AreEqual(ScriptParameterKind.Integer, actual1.Head.Parameters[1].Kind);
+            currentIndex = 1;
+            Assert.AreEqual("name2", actual1.Head.Parameters[currentIndex].Name);
+            Assert.AreEqual("なまえ2", actual1.Head.Parameters[currentIndex].Display);
+            Assert.IsFalse(actual1.Head.Parameters[currentIndex].Required);
+            Assert.AreEqual(ScriptParameterKind.Integer, actual1.Head.Parameters[currentIndex].Kind);
 
-            Assert.AreEqual("name3", actual1.Head.Parameters[2].Name);
-            Assert.IsTrue(actual1.Head.Parameters[2].Required);
-            Assert.AreEqual(ScriptParameterKind.Decimal, actual1.Head.Parameters[2].Kind);
+            currentIndex = 2;
+            Assert.AreEqual("name3", actual1.Head.Parameters[currentIndex].Name);
+            Assert.AreEqual("name3", actual1.Head.Parameters[currentIndex].Display);
+            Assert.IsTrue(actual1.Head.Parameters[currentIndex].Required);
+            Assert.AreEqual(ScriptParameterKind.Decimal, actual1.Head.Parameters[currentIndex].Kind);
 
-            Assert.AreEqual("name4", actual1.Head.Parameters[3].Name);
-            Assert.IsFalse(actual1.Head.Parameters[3].Required);
-            Assert.AreEqual(ScriptParameterKind.DateTime, actual1.Head.Parameters[3].Kind);
+            currentIndex = 3;
+            Assert.AreEqual("name4", actual1.Head.Parameters[currentIndex].Name);
+            Assert.AreEqual("name4", actual1.Head.Parameters[currentIndex].Display);
+            Assert.IsFalse(actual1.Head.Parameters[currentIndex].Required);
+            Assert.AreEqual(ScriptParameterKind.DateTime, actual1.Head.Parameters[currentIndex].Kind);
 
-            Assert.AreEqual("name5", actual1.Head.Parameters[4].Name);
-            Assert.IsTrue(actual1.Head.Parameters[4].Required);
-            Assert.AreEqual(ScriptParameterKind.Boolean, actual1.Head.Parameters[4].Kind);
+            currentIndex = 4;
+            Assert.AreEqual("name5", actual1.Head.Parameters[currentIndex].Name);
+            Assert.AreEqual("name5", actual1.Head.Parameters[currentIndex].Display);
+            Assert.IsTrue(actual1.Head.Parameters[currentIndex].Required);
+            Assert.AreEqual(ScriptParameterKind.Boolean, actual1.Head.Parameters[currentIndex].Kind);
 
             Assert.AreEqual("BODY", actual1.Body.Source);
         }

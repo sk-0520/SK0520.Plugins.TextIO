@@ -8,6 +8,7 @@ namespace SK0520.Plugins.TextIO.Models.Data
 {
     public record ScriptParameter(
         string Name,
+        string Display,
         bool Required,
         ScriptParameterKind Kind
     );

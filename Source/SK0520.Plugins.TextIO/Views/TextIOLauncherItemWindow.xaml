@@ -99,10 +99,10 @@
 
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" MinHeight="150" />
-                        <RowDefinition Height="Auto" MaxHeight="300" />
+                        <RowDefinition Height="6*" />
+                        <RowDefinition Height="4*" />
                     </Grid.RowDefinitions>
-                    
+
                     <ListBox 
                         Grid.Row="0" 
                         Margin="{StaticResource CommonThickness}" 
@@ -121,6 +121,41 @@
                         Margin="{StaticResource CommonThickness}"
                         Header="params"
                     >
+                        <GroupBox.Resources>
+                            <DataTemplate DataType="{x:Type viewmodels:BooleanScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Display}" ToolTip="{Binding Name}" />
+                                    <WrapPanel Orientation="Horizontal">
+                                        <RadioButton IsChecked="{Binding Value, Converter={StaticResource RadioButtonNegativeConverter}}">OFF</RadioButton>
+                                        <RadioButton IsChecked="{Binding Value}">ON</RadioButton>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:StringScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Display}" ToolTip="{Binding Name}" />
+                                    <TextBox Text="{Binding Value}" />
+                                </StackPanel>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:IntegerScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Display}" ToolTip="{Binding Name}" />
+                                    <TextBox Text="{Binding Value}" />
+                                </StackPanel>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:DecimalScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Display}" ToolTip="{Binding Name}" />
+                                    <TextBox Text="{Binding Value}" />
+                                </StackPanel>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type viewmodels:DateTimeScriptParameterViewModel}">
+                                <StackPanel>
+                                    <Label Content="{Binding Display}" ToolTip="{Binding Name}" />
+                                    <DatePicker SelectedDate="{Binding Value}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GroupBox.Resources>
                         <GroupBox.Style>
                             <Style TargetType="GroupBox">
                                 <Style.Triggers>
@@ -129,61 +164,33 @@
                                             <Condition Binding="{Binding IsSelectedScriptHead}" Value="True" />
                                             <Condition Binding="{Binding SelectedScriptHead.HasParameters}" Value="True" />
                                         </MultiDataTrigger.Conditions>
-                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <ItemsControl ItemsSource="{Binding SelectedScriptHead.ParameterCollection}">
+                                                    <ItemsControl.Template>
+                                                        <ControlTemplate>
+                                                            <ScrollViewer>
+                                                                <ItemsPresenter />
+                                                            </ScrollViewer>
+                                                        </ControlTemplate>
+                                                    </ItemsControl.Template>
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                </ItemsControl>
+                                            </Setter.Value>
+                                        </Setter>
                                     </MultiDataTrigger>
                                 </Style.Triggers>
-                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">パラメータなし</TextBlock>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </GroupBox.Style>
-                        <ItemsControl ItemsSource="{Binding SelectedScriptHead.ParameterCollection}">
-                            <ItemsControl.Resources>
-                                <DataTemplate DataType="{x:Type viewmodels:BooleanScriptParameterViewModel}">
-                                    <StackPanel>
-                                        <Label Content="{Binding Name}" />
-                                        <WrapPanel Orientation="Horizontal">
-                                            <RadioButton IsChecked="{Binding Value, Converter={StaticResource RadioButtonNegativeConverter}}">OFF</RadioButton>
-                                            <RadioButton IsChecked="{Binding Value}">ON</RadioButton>
-                                        </WrapPanel>
-                                    </StackPanel>
-                                </DataTemplate>
-                                <DataTemplate DataType="{x:Type viewmodels:StringScriptParameterViewModel}">
-                                    <StackPanel>
-                                        <Label Content="{Binding Name}" />
-                                        <TextBox Text="{Binding Value}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                                <DataTemplate DataType="{x:Type viewmodels:IntegerScriptParameterViewModel}">
-                                    <StackPanel>
-                                        <Label Content="{Binding Name}" />
-                                        <TextBox Text="{Binding Value}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                                <DataTemplate DataType="{x:Type viewmodels:DecimalScriptParameterViewModel}">
-                                    <StackPanel>
-                                        <Label Content="{Binding Name}" />
-                                        <TextBox Text="{Binding Value}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                                <DataTemplate DataType="{x:Type viewmodels:DateTimeScriptParameterViewModel}">
-                                    <StackPanel>
-                                        <Label Content="{Binding Name}" />
-                                        <DatePicker SelectedDate="{Binding Value}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.Resources>
-                            <ItemsControl.Template>
-                                <ControlTemplate>
-                                    <ScrollViewer>
-                                        <ItemsPresenter />
-                                    </ScrollViewer>
-                                </ControlTemplate>
-                            </ItemsControl.Template>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
                     </GroupBox>
 
                 </Grid>

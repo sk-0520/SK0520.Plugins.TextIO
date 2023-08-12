@@ -60,8 +60,11 @@ namespace SK0520.Plugins.TextIO.ViewModels
         protected ScriptParameter Parameter { get; }
 
         public string Name => Parameter.Name;
+        public string Display => Parameter.Display;
 
         public bool IsRequired => Parameter.Required;
+
+        public object? RawValue { get; protected set; }
 
         #endregion
     }
@@ -81,41 +84,55 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #region property
 
+        [AllowNull]
         public T Value
         {
             get => this._value;
-            set => SetProperty(ref this._value, value);
+            set
+            {
+                SetProperty(ref this._value, value);
+                RawValue = this._value;
+            }
         }
 
         #endregion
     }
 
-    public sealed class BooleanScriptParameterViewModel : ScriptParameterViewModelBase<bool>
+    public sealed class BooleanScriptParameterViewModel : ScriptParameterViewModelBase<bool?>
     {
         public BooleanScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
-        { }
+        { 
+            Value = IsRequired ? false : null;
+        }
     }
     public sealed class StringScriptParameterViewModel : ScriptParameterViewModelBase<string>
     {
         public StringScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
-        { }
+        {
+            Value = IsRequired ? string.Empty : null;
+        }
     }
-    public sealed class IntegerScriptParameterViewModel : ScriptParameterViewModelBase<int>
+
+    public sealed class IntegerScriptParameterViewModel : ScriptParameterViewModelBase<int?>
     {
         public IntegerScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
-        { }
+        { 
+            Value = IsRequired ? 0 : null;
+        }
     }
 
-    public sealed class DecimalScriptParameterViewModel : ScriptParameterViewModelBase<decimal>
+    public sealed class DecimalScriptParameterViewModel : ScriptParameterViewModelBase<decimal?>
     {
         public DecimalScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
-        { }
+        {
+            Value = IsRequired ? 0 : null;
+        }
     }
-    public sealed class DateTimeScriptParameterViewModel : ScriptParameterViewModelBase<DateTime>
+    public sealed class DateTimeScriptParameterViewModel : ScriptParameterViewModelBase<DateTime?>
     {
         public DateTimeScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)

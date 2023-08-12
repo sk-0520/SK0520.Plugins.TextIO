@@ -32,18 +32,39 @@ namespace SK0520.Plugins.TextIO.Models
 
         #region function
 
+        private string? GetRawOption(string name, IEnumerable<string> options)
+        {
+            var values = options
+                .Select(a => a.Split('=', 2))
+                .FirstOrDefault(a => a[0] == name)
+            ;
+            if(values is null)
+            {
+                return null;
+            }
+            if(string.IsNullOrWhiteSpace(values[1]))
+            {
+                return null;
+            }
+
+            return values[1].Trim();
+
+        }
+
         private bool GetRequired(IEnumerable<string> options)
         {
-            var require = options
-                .Select(a => a.Split('=', 2))
-                .FirstOrDefault(a => a[0] == "require")
-            ;
-            if(require is null)
+            var value = GetRawOption("require", options);
+            if(value is null)
             {
                 return false;
             }
 
-            return Convert.ToBoolean(require[1]);
+            return Convert.ToBoolean(value);
+        }
+
+        private string? GetDisplay(IEnumerable<string> options)
+        {
+            return GetRawOption("display", options);
         }
 
         public ScriptSetting LoadSource(string source)
@@ -113,12 +134,14 @@ namespace SK0520.Plugins.TextIO.Models
                                 var options = option.Split('#').Select(a => a.Trim()).ToArray();
                                 var paramName = options[0];
                                 var required = GetRequired(options.Skip(1));
+                                var display = GetDisplay(options.Skip(1));
                                 if (parameters.Any(a => a.Name == paramName))
                                 {
                                     throw new Exception($"name: {paramName}");
                                 }
                                 parameters.Add(new ScriptParameter(
                                     paramName,
+                                    display ?? paramName,
                                     required,
                                     Enum.Parse<ScriptParameterKind>(value, true)
                                 ));

@@ -194,13 +194,33 @@ namespace SK0520.Plugins.TextIO.ViewModels
         public ICommand ExecuteCommand => this._executeCommand ??= CreateCommand<ScriptHeadViewModel>(
             o =>
             {
-                if(SelectedScriptHead is null)
+                if (SelectedScriptHead is null)
                 {
                     Logger.LogDebug("対象スクリプト未選択");
                     return;
                 }
 
-                Logger.LogInformation("[{SCRIPT}] ここから！", SelectedScriptHead.ScriptId);
+                try
+                {
+                    var options = SelectedScriptHead.ParameterCollection
+                        .Select(a =>
+                        {
+                            if (a.IsRequired && a.RawValue is null)
+                            {
+                                throw new InvalidDataException(a.Display);
+                            }
+                            return a;
+                        })
+                        .ToDictionary(k => k.Name, v => v.RawValue)
+                    ;
+                    Logger.LogInformation("[{SCRIPT}] ここから！ {options}", SelectedScriptHead.ScriptId, options);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, ex.Message);
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
             }
         );
 
