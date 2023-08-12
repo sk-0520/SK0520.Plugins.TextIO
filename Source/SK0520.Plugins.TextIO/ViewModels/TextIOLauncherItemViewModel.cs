@@ -199,28 +199,32 @@ namespace SK0520.Plugins.TextIO.ViewModels
                     Logger.LogDebug("対象スクリプト未選択");
                     return;
                 }
-
-                try
+                Task.Run(() =>
                 {
-                    var options = SelectedScriptHead.ParameterCollection
-                        .Select(a =>
-                        {
-                            if (a.IsRequired && a.RawValue is null)
+                    try
+                    {
+                        var options = SelectedScriptHead.ParameterCollection
+                            .Select(a =>
                             {
-                                throw new InvalidDataException(a.Display);
-                            }
-                            return a;
-                        })
-                        .ToDictionary(k => k.Name, v => v.RawValue)
-                    ;
-                    Logger.LogInformation("[{SCRIPT}] ここから！ {options}", SelectedScriptHead.ScriptId, options);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex, ex.Message);
-                    MessageBox.Show(ex.Message);
-                    return;
-                }
+                                if (a.IsRequired && a.RawValue is null)
+                                {
+                                    throw new InvalidDataException(a.Display);
+                                }
+                                return a;
+                            })
+                            .ToDictionary(k => k.Name, v => v.RawValue)
+                        ;
+                        Logger.LogInformation("[{SCRIPT}] ここから！ {options}", SelectedScriptHead.ScriptId, options);
+                        var result = Item.RunScriptAsync(SelectedScriptHead.ScriptId, options);
+                        Logger.LogInformation("[{SCRIPT}] result. ", SelectedScriptHead.ScriptId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex, ex.Message);
+                        MessageBox.Show(ex.Message);
+                        return;
+                    }
+                });
             }
         );
 

@@ -107,6 +107,28 @@ namespace SK0520.Plugins.TextIO.Addon
             return result;
         }
 
+        private (string language, string source) GetScript(Guid scriptId)
+        {
+            string language = "javascript";
+            string? source = null;
+
+            ContextWorker.RunLauncherItemAddon(c =>
+            {
+                if(c.Storage.Persistence.Normal.TryGet(c.LauncherItemId, ToMetaKey(scriptId), out ScriptBodySetting?  result))
+                {
+                    source = result?.Source;
+                }
+                return false;
+            });
+
+            if(source is null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return (language, source);
+        }
+
         public ScriptSetting AddScriptFile(FileInfo file)
         {
             var source = ReadText(file);
@@ -222,6 +244,18 @@ namespace SK0520.Plugins.TextIO.Addon
 
                 return true;
             });
+        }
+
+        public Task RunScriptAsync(Guid scriptId, IReadOnlyDictionary<string, object?> parameters)
+        {
+            var script = GetScript(scriptId);
+            var engine = new Jint.Engine()
+            {
+            };
+
+            engine.Execute(script.source);
+
+            return Task.CompletedTask;
         }
 
         #endregion
