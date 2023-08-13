@@ -114,7 +114,7 @@ namespace SK0520.Plugins.TextIO.Addon
 
             ContextWorker.RunLauncherItemAddon(c =>
             {
-                if(c.Storage.Persistence.Normal.TryGet(c.LauncherItemId, ToMetaKey(scriptId), out ScriptBodySetting?  result))
+                if(c.Storage.Persistence.Normal.TryGet(c.LauncherItemId, ToBodyKey(scriptId), out ScriptBodySetting?  result))
                 {
                     source = result?.Source;
                 }
