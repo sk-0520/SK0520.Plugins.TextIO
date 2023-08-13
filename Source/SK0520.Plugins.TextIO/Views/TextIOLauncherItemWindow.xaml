@@ -13,7 +13,7 @@
     Width="800"
     WindowStartupLocation="CenterScreen"
     ResizeMode="CanResizeWithGrip"
-    Topmost="{Binding IsChecked, ElementName=topmost}"
+    Topmost="{Binding IsChecked, ElementName=IsTopmost}"
     
     xmlns:viewmodels="clr-namespace:SK0520.Plugins.TextIO.ViewModels"
     
@@ -29,21 +29,17 @@
         <Style x:Key="ToolbarTitle" TargetType="Label">
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
-        <Style x:Key="Editor" TargetType="{x:Type sharpdevelop_avalonedit:TextEditor}">
+        <Style x:Key="Editor" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="IsReadOnly" Value="True">
+                    <Setter Property="UndoLimit" Value="0" />
+                </Trigger>
+            </Style.Triggers>
             <Setter Property="Margin" Value="{StaticResource CommonThickness}" />
-            <Setter Property="ShowLineNumbers" Value="True" />
-            <Setter Property="Options">
-                <Setter.Value>
-                    <sharpdevelop_avalonedit:TextEditorOptions
-                        EnableEmailHyperlinks="False"
-                        EnableHyperlinks="False"
-                        EnableVirtualSpace="False"
-                        ShowEndOfLine="True"
-                        ShowSpaces="True"
-                        ShowTabs="True"
-                    />
-                </Setter.Value>
-            </Setter>
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="AcceptsTab" Value="True" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
         </Style>
     </Window.Resources>
 
@@ -74,7 +70,21 @@
                     <Button Command="ApplicationCommands.Paste">paste</Button>
                 </ToolBar>
 
-                <sharpdevelop_avalonedit:TextEditor Grid.Row="1" Style="{StaticResource Editor}" />
+                <TextBox 
+                    Grid.Row="1" 
+                    Text="{Binding InputValue}"
+                >
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource Editor}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=IsInputBreak}" Value="True">
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Setter Property="TextWrapping" Value="NoWrap" />
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
             </Grid>
 
             <GridSplitter Grid.Column="1" Width="{StaticResource GridSplitter}" />
@@ -100,6 +110,7 @@
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="6*" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="4*" />
                     </Grid.RowDefinitions>
 
@@ -116,8 +127,10 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
+                    <GridSplitter Grid.Row="1" Height="{StaticResource GridSplitter}"/>
+
                     <GroupBox
-                        Grid.Row="1"
+                        Grid.Row="2"
                         Margin="{StaticResource CommonThickness}"
                         Header="params"
                     >
@@ -214,12 +227,32 @@
                     <Button Command="ApplicationCommands.Copy">copy</Button>
                 </ToolBar>
 
-                <sharpdevelop_avalonedit:TextEditor Grid.Row="3" IsReadOnly="True" Style="{StaticResource Editor}" />
+                <TextBox 
+                    Grid.Row="3"
+                    IsReadOnly="True"
+                    Text="{Binding OutputValue, Mode=OneWay}"
+                >
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource Editor}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding OutputIsError}" Value="True">
+                                    <Setter Property="Background" Value="LightPink" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=IsOutputBreak}" Value="True">
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Setter Property="TextWrapping" Value="NoWrap" />
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
             </Grid>
         </Grid>
 
         <StatusBar Grid.Row="1">
-            <CheckBox x:Name="topmost">topmost</CheckBox>
+            <CheckBox x:Name="IsTopmost">topmost</CheckBox>
+            <CheckBox x:Name="IsInputBreak">input break</CheckBox>
+            <CheckBox x:Name="IsOutputBreak">output break</CheckBox>
         </StatusBar>
     </Grid>
 </Window>

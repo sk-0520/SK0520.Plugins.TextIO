@@ -6,6 +6,7 @@ using ContentTypeTextNet.Pe.Bridge.Plugin.Preferences;
 using ContentTypeTextNet.Pe.Embedded.Abstract;
 using Jint.Native;
 using Jint.Native.Json;
+using Jint.Runtime;
 using Microsoft.Extensions.Logging;
 using SK0520.Plugins.TextIO.Models;
 using SK0520.Plugins.TextIO.Models.Data;
@@ -17,6 +18,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SK0520.Plugins.TextIO.Addon
@@ -28,6 +30,8 @@ namespace SK0520.Plugins.TextIO.Addon
         private string ListKey = string.Empty;
         private string HeadBaseKey = string.Empty;
         private string BodyBaseKey = string.Empty;
+
+        private string DefaultEntryFunctionName = "handler";
 
         #endregion
 
@@ -90,16 +94,9 @@ namespace SK0520.Plugins.TextIO.Addon
             return result;
         }
 
-        public ScriptMetaSetting GetMeta(Guid scriptId)
+        private ScriptMetaSetting GetMetaCore(Guid scriptId, ILauncherItemAddonPersistence persistence)
         {
-            ScriptMetaSetting? result = null;
-
-            ContextWorker.RunLauncherItemAddon(c =>
-            {
-                c.Storage.Persistence.Normal.TryGet<ScriptMetaSetting?>(c.LauncherItemId, ToMetaKey(scriptId), out result);
-                return false;
-            });
-
+            persistence.Normal.TryGet<ScriptMetaSetting?>(LauncherItemId, ToMetaKey(scriptId), out var result);
             if (result is null)
             {
                 throw new KeyNotFoundException(scriptId.ToString());
@@ -108,24 +105,49 @@ namespace SK0520.Plugins.TextIO.Addon
             return result;
         }
 
-        private (string language, string source) GetScript(Guid scriptId)
+        public ScriptMetaSetting GetMeta(Guid scriptId)
+        {
+            ScriptMetaSetting? result = null;
+
+            ContextWorker.RunLauncherItemAddon(c =>
+            {
+                result = GetMetaCore(scriptId, c.Storage.Persistence);
+                return false;
+            });
+
+            Debug.Assert(result is not null);
+
+            return result;
+        }
+
+        private (string language, string source) GetScriptCore(Guid scriptId, ILauncherItemAddonPersistence persistence)
         {
             string language = "javascript";
             string? source = null;
 
-            ContextWorker.RunLauncherItemAddon(c =>
+            if (persistence.Normal.TryGet(LauncherItemId, ToBodyKey(scriptId), out ScriptBodySetting? result))
             {
-                if (c.Storage.Persistence.Normal.TryGet(c.LauncherItemId, ToBodyKey(scriptId), out ScriptBodySetting? result))
-                {
-                    source = result?.Source;
-                }
-                return false;
-            });
+                source = result?.Source;
+            }
 
             if (source is null)
             {
                 throw new InvalidOperationException();
             }
+
+            return (language, source);
+        }
+
+        private (string language, string source) GetScript(Guid scriptId)
+        {
+            string language = string.Empty;
+            string source = string.Empty;
+
+            ContextWorker.RunLauncherItemAddon(c =>
+            {
+                (language, source) = GetScriptCore(scriptId, c.Storage.Persistence);
+                return false;
+            });
 
             return (language, source);
         }
@@ -247,44 +269,77 @@ namespace SK0520.Plugins.TextIO.Addon
             });
         }
 
-        public Task<ScriptResponse> RunScriptAsync(Guid scriptId, IReadOnlyDictionary<string, object?> parameters)
+        public Task<ScriptResponse> RunScriptAsync(Guid scriptId, string input, IReadOnlyDictionary<string, object?> parameters)
         {
             var script = GetScript(scriptId);
-            var engine = new Jint.Engine()
-            {
-            };
 
-            var entryFunctionName = "handler";
+            var entryFunctionName = DefaultEntryFunctionName;
 
             try
             {
+                var engine = new Jint.Engine();
                 var handler = engine
                     .Execute(script.source)
                     .GetValue(entryFunctionName)
                 ;
-                if(handler == JsValue.Undefined)
+                if (handler == JsValue.Undefined)
                 {
                     throw new KeyNotFoundException(entryFunctionName);
                 }
 
-                
                 var args = JsValue.FromObject(engine, new
                 {
+                    input = input,
                     parameters = parameters,
                 });
+
                 var result = handler.Invoke(args);
-                if (result == JsValue.Undefined)
+
+                if (!(result.IsString() || result.IsObject() || result.IsNumber() || result.IsBoolean()) || result.IsArray())
                 {
-                    throw new Exception("undefined result");
+                    throw new Exception("undefined " + result);
                 }
 
-                var obj = result.ToObject();
+                var resultObject = result.ToObject();
+                if (resultObject is System.Dynamic.ExpandoObject dynamicValue)
+                {
+                    var map = (IDictionary<string, object?>)dynamicValue;
+
+                    if (map.TryGetValue("kind", out var resultRawKind) && resultRawKind is string resultKind)
+                    {
+                        if (Enum.TryParse(resultKind, true, out ScriptResultKind kind))
+                        {
+                            if (map.TryGetValue("data", out var resultRawData))
+                            {
+                                switch (kind)
+                                {
+                                    case ScriptResultKind.Text:
+                                        if (resultRawData is null || resultRawData is string)
+                                        {
+                                            return Task.FromResult(new ScriptResponse()
+                                            {
+                                                Success = true,
+                                                Kind = kind,
+                                                Data = Convert.ToString(resultRawData),
+                                            });
+                                        }
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+
+                    throw new Exception();
+                }
 
                 return Task.FromResult(new ScriptResponse()
                 {
                     Success = true,
                     Kind = ScriptResultKind.Text,
-                    Data = "",
+                    Data = Convert.ToString(resultObject),
                 });
             }
             catch (Exception ex)

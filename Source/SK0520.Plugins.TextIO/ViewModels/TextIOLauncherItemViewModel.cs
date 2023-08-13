@@ -24,6 +24,10 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         private bool _isRunning = false;
 
+        private string _inputValue = string.Empty;
+        private string _outputValue = string.Empty;
+        private bool _outputIsError = false;
+
         private ScriptHeadViewModel? _scriptHead;
 
         private ICommand? _addScriptCommand;
@@ -53,6 +57,23 @@ namespace SK0520.Plugins.TextIO.ViewModels
         {
             get => this._isRunning;
             set => SetProperty(ref this._isRunning, value);
+        }
+
+        public string InputValue
+        {
+            get => this._inputValue;
+            set => SetProperty(ref this._inputValue, value);
+        }
+        public string OutputValue
+        {
+            get => this._outputValue;
+            set => SetProperty(ref this._outputValue, value);
+        }
+
+        public bool OutputIsError
+        {
+            get => this._outputIsError;
+            set => SetProperty(ref this._outputIsError, value);
         }
 
         public ObservableCollection<ScriptHeadViewModel> ScriptHeadCollection { get; }
@@ -189,15 +210,15 @@ namespace SK0520.Plugins.TextIO.ViewModels
             );
         }
 
-        public ICommand ExecuteCommand => this._executeCommand ??= CreateCommand<ScriptHeadViewModel>(
-            o =>
+        public ICommand ExecuteCommand => this._executeCommand ??= CreateCommand(
+            () =>
             {
                 if (SelectedScriptHead is null)
                 {
                     Logger.LogDebug("対象スクリプト未選択");
                     return;
                 }
-                Task.Run(() =>
+                _ = Task.Run(async () =>
                 {
                     try
                     {
@@ -213,8 +234,26 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             .ToDictionary(k => k.Name, v => v.RawValue)
                         ;
                         Logger.LogInformation("[{SCRIPT}] ここから！ {options}", SelectedScriptHead.ScriptId, options);
-                        var result = Item.RunScriptAsync(SelectedScriptHead.ScriptId, options);
-                        Logger.LogInformation("[{SCRIPT}] result. ", SelectedScriptHead.ScriptId);
+                        var result = await Item.RunScriptAsync(SelectedScriptHead.ScriptId, InputValue, options);
+                        Logger.LogInformation("[{SCRIPT}] <{SUCCESS}> {KIND}: {DATA}", SelectedScriptHead.ScriptId, result.Success, result.Kind, result.Data);
+                        if (result.Success)
+                        {
+                            switch (result.Kind)
+                            {
+                                case ScriptResultKind.Text:
+                                    OutputValue = (string)result.Data;
+                                    break;
+
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                            OutputIsError = false;
+                        }
+                        else
+                        {
+                            OutputIsError = true;
+                            OutputValue = SelectedScriptHead.Name + Environment.NewLine + "--------------" + Environment.NewLine + result.Exception.ToString();
+                        }
                     }
                     catch (Exception ex)
                     {
