@@ -22,5 +22,6 @@
 
 	<PropertyGroup>
 		<EnableDynamicLoading>true</EnableDynamicLoading>
+		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
 	</PropertyGroup>
 </Project>
