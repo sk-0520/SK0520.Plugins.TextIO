@@ -275,9 +275,12 @@ namespace SK0520.Plugins.TextIO.Addon
 
             var entryFunctionName = DefaultEntryFunctionName;
 
+            var engine = new Jint.Engine();
+
+            var beginTimestamp = DateTime.UtcNow;
+
             try
             {
-                var engine = new Jint.Engine();
                 var handler = engine
                     .Execute(script.source)
                     .GetValue(entryFunctionName)
@@ -294,6 +297,7 @@ namespace SK0520.Plugins.TextIO.Addon
                 });
 
                 var result = handler.Invoke(args);
+                var endTimestamp = DateTime.UtcNow;
 
                 if (!(result.IsString() || result.IsObject() || result.IsNumber() || result.IsBoolean()) || result.IsArray())
                 {
@@ -319,6 +323,8 @@ namespace SK0520.Plugins.TextIO.Addon
                                             return Task.FromResult(new ScriptResponse()
                                             {
                                                 Success = true,
+                                                BeginTimestamp = beginTimestamp,
+                                                EndTimestamp = endTimestamp,
                                                 Kind = kind,
                                                 Data = Convert.ToString(resultRawData),
                                             });
@@ -338,6 +344,8 @@ namespace SK0520.Plugins.TextIO.Addon
                 return Task.FromResult(new ScriptResponse()
                 {
                     Success = true,
+                    BeginTimestamp = beginTimestamp,
+                    EndTimestamp = endTimestamp,
                     Kind = ScriptResultKind.Text,
                     Data = Convert.ToString(resultObject),
                 });
@@ -348,6 +356,8 @@ namespace SK0520.Plugins.TextIO.Addon
                 return Task.FromResult(new ScriptResponse()
                 {
                     Success = false,
+                    BeginTimestamp = beginTimestamp,
+                    EndTimestamp = DateTime.UtcNow,
                     Exception = ex,
                 });
             }

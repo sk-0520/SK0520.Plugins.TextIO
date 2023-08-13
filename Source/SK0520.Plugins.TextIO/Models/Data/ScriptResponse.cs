@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ContentTypeTextNet.Pe.Bridge.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -25,6 +26,11 @@ namespace SK0520.Plugins.TextIO.Models.Data
         public object? Data { get; init; }
 
         public Exception? Exception { get; init; }
+
+        [DateTimeKind(DateTimeKind.Utc)]
+        public required DateTime BeginTimestamp { get; init; }
+        [DateTimeKind(DateTimeKind.Utc)]
+        public required DateTime EndTimestamp { get; init; }
 
         #endregion
     }

@@ -233,9 +233,9 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             })
                             .ToDictionary(k => k.Name, v => v.RawValue)
                         ;
-                        Logger.LogInformation("[{SCRIPT}] ここから！ {options}", SelectedScriptHead.ScriptId, options);
+                        Logger.LogInformation("[{SCRIPT}] 実行 {options}", SelectedScriptHead.ScriptId, options);
                         var result = await Item.RunScriptAsync(SelectedScriptHead.ScriptId, InputValue, options);
-                        Logger.LogInformation("[{SCRIPT}] <{SUCCESS}> {KIND}: {DATA}", SelectedScriptHead.ScriptId, result.Success, result.Kind, result.Data);
+                        Logger.LogInformation("[{SCRIPT}] <{SUCCESS}> {TIME} - {KIND}: {DATA}", SelectedScriptHead.ScriptId, result.Success ? "Success": "Failure", result.EndTimestamp - result.BeginTimestamp, result.Kind, result.Data);
                         if (result.Success)
                         {
                             switch (result.Kind)
