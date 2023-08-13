@@ -271,6 +271,8 @@ namespace SK0520.Plugins.TextIO.Addon
 
         public Task<ScriptResponse> RunScriptAsync(Guid scriptId, string input, IReadOnlyDictionary<string, object?> parameters)
         {
+            string scriptName = string.Empty;
+
             var script = GetScript(scriptId);
 
             var entryFunctionName = DefaultEntryFunctionName;
@@ -282,6 +284,7 @@ namespace SK0520.Plugins.TextIO.Addon
             try
             {
                 var handler = engine
+                    .SetValue("logger", new ScriptLogger(scriptId, scriptName, LoggerFactory))
                     .Execute(script.source)
                     .GetValue(entryFunctionName)
                 ;
