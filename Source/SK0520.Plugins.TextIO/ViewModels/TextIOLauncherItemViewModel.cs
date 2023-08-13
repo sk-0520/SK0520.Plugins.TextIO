@@ -38,7 +38,6 @@ namespace SK0520.Plugins.TextIO.ViewModels
         internal TextIOLauncherItemViewModel(TextIOLauncherItem item, ILauncherItemAddonContext launcherItemAddonContext, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
             : base(skeletonImplements, dispatcherWrapper, loggerFactory)
         {
-            LoggerFactory = loggerFactory;
             Item = item;
             LauncherItemAddonContext = launcherItemAddonContext;
             var heads = Item.GetScriptHeads(LauncherItemAddonContext.Storage.Persistence);
@@ -47,7 +46,6 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #region property
 
-        private ILoggerFactory LoggerFactory { get; }
         private TextIOLauncherItem Item { get; }
         private ILauncherItemAddonContext LauncherItemAddonContext { get; }
 

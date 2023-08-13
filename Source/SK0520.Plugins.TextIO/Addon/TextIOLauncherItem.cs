@@ -5,6 +5,7 @@ using ContentTypeTextNet.Pe.Bridge.Plugin.Addon;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Preferences;
 using ContentTypeTextNet.Pe.Embedded.Abstract;
 using Jint.Native;
+using Jint.Native.Json;
 using Microsoft.Extensions.Logging;
 using SK0520.Plugins.TextIO.Models;
 using SK0520.Plugins.TextIO.Models.Data;
@@ -114,14 +115,14 @@ namespace SK0520.Plugins.TextIO.Addon
 
             ContextWorker.RunLauncherItemAddon(c =>
             {
-                if(c.Storage.Persistence.Normal.TryGet(c.LauncherItemId, ToBodyKey(scriptId), out ScriptBodySetting?  result))
+                if (c.Storage.Persistence.Normal.TryGet(c.LauncherItemId, ToBodyKey(scriptId), out ScriptBodySetting? result))
                 {
                     source = result?.Source;
                 }
                 return false;
             });
 
-            if(source is null)
+            if (source is null)
             {
                 throw new InvalidOperationException();
             }
@@ -246,16 +247,55 @@ namespace SK0520.Plugins.TextIO.Addon
             });
         }
 
-        public Task RunScriptAsync(Guid scriptId, IReadOnlyDictionary<string, object?> parameters)
+        public Task<ScriptResponse> RunScriptAsync(Guid scriptId, IReadOnlyDictionary<string, object?> parameters)
         {
             var script = GetScript(scriptId);
             var engine = new Jint.Engine()
             {
             };
 
-            engine.Execute(script.source);
+            var entryFunctionName = "handler";
 
-            return Task.CompletedTask;
+            try
+            {
+                var handler = engine
+                    .Execute(script.source)
+                    .GetValue(entryFunctionName)
+                ;
+                if(handler == JsValue.Undefined)
+                {
+                    throw new KeyNotFoundException(entryFunctionName);
+                }
+
+                
+                var args = JsValue.FromObject(engine, new
+                {
+                    parameters = parameters,
+                });
+                var result = handler.Invoke(args);
+                if (result == JsValue.Undefined)
+                {
+                    throw new Exception("undefined result");
+                }
+
+                var obj = result.ToObject();
+
+                return Task.FromResult(new ScriptResponse()
+                {
+                    Success = true,
+                    Kind = ScriptResultKind.Text,
+                    Data = "",
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, ex.Message);
+                return Task.FromResult(new ScriptResponse()
+                {
+                    Success = false,
+                    Exception = ex,
+                });
+            }
         }
 
         #endregion
