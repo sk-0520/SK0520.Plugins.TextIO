@@ -7,21 +7,13 @@ using System.Threading.Tasks;
 
 namespace SK0520.Plugins.TextIO.Models
 {
-    public class ScriptLogger
+    public class InjectionLogger : InjectionBase
     {
-        public ScriptLogger(Guid scriptId, string scriptName, ILoggerFactory loggerFactory)
-        {
-            ScriptId = scriptId;
-            ScriptName = scriptName;
-            Logger = loggerFactory.CreateLogger(GetType());
-        }
+        public InjectionLogger(Guid scriptId, string scriptName, ILoggerFactory loggerFactory)
+            : base(scriptId, scriptName, loggerFactory)
+        { }
 
         #region property
-
-        private Guid ScriptId { get; }
-        private string ScriptName { get; }
-
-        private ILogger Logger { get; }
 
         #endregion
 

@@ -277,7 +277,7 @@ namespace SK0520.Plugins.TextIO.Addon
                     "Pe",
                     new
                     {
-                        logger = new ScriptLogger(scriptId, scriptName, LoggerFactory),
+                        logger = new InjectionLogger(scriptId, scriptName, LoggerFactory),
                     }
                 )
                 .Execute(source)
