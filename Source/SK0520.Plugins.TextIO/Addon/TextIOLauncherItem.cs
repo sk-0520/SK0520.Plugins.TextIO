@@ -4,6 +4,7 @@ using ContentTypeTextNet.Pe.Bridge.Plugin;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Addon;
 using ContentTypeTextNet.Pe.Bridge.Plugin.Preferences;
 using ContentTypeTextNet.Pe.Embedded.Abstract;
+using Jint;
 using Jint.Native;
 using Jint.Native.Json;
 using Jint.Runtime;
@@ -269,6 +270,23 @@ namespace SK0520.Plugins.TextIO.Addon
             });
         }
 
+        public JsValue InjectSource(Engine engine, Guid scriptId, string scriptName, string source, string entryFunctionName)
+        {
+            var handler = engine
+                .SetValue(
+                    "Pe",
+                    new
+                    {
+                        logger = new ScriptLogger(scriptId, scriptName, LoggerFactory),
+                    }
+                )
+                .Execute(source)
+                .GetValue(entryFunctionName)
+            ;
+
+            return handler;
+        }
+
         public Task<ScriptResponse> RunScriptAsync(Guid scriptId, string input, IReadOnlyDictionary<string, object?> parameters)
         {
             string scriptName = string.Empty;
@@ -283,17 +301,7 @@ namespace SK0520.Plugins.TextIO.Addon
 
             try
             {
-                var handler = engine
-                    .SetValue(
-                        "Pe",
-                        new
-                        {
-                            logger = new ScriptLogger(scriptId, scriptName, LoggerFactory),
-                        }
-                    )
-                    .Execute(script.source)
-                    .GetValue(entryFunctionName)
-                ;
+                var handler = InjectSource(engine, scriptId, scriptName, script.source, entryFunctionName);
                 if (handler == JsValue.Undefined)
                 {
                     throw new KeyNotFoundException(entryFunctionName);
