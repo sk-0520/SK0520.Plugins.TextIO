@@ -1,4 +1,4 @@
-﻿using ContentTypeTextNet.Pe.Bridge.Models;
+using ContentTypeTextNet.Pe.Bridge.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

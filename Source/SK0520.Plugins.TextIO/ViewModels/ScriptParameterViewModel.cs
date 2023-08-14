@@ -1,4 +1,4 @@
-﻿using ContentTypeTextNet.Pe.Bridge.Models;
+using ContentTypeTextNet.Pe.Bridge.Models;
 using ContentTypeTextNet.Pe.Bridge.ViewModels;
 using Microsoft.Extensions.Logging;
 using SK0520.Plugins.TextIO.Models.Data;
