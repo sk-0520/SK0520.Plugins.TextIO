@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace SK0520.Plugins.TextIO.Models.Data
 {
+    /// <summary>
+    /// 結果データ型。
+    /// <para>実データの型ではなく出力の表示種別を意味する。</para>
+    /// </summary>
     public enum ScriptResultKind
     {
         None,

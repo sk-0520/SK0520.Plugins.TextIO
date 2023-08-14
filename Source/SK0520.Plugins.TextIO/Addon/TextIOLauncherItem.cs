@@ -284,7 +284,13 @@ namespace SK0520.Plugins.TextIO.Addon
             try
             {
                 var handler = engine
-                    .SetValue("logger", new ScriptLogger(scriptId, scriptName, LoggerFactory))
+                    .SetValue(
+                        "Pe",
+                        new
+                        {
+                            logger = new ScriptLogger(scriptId, scriptName, LoggerFactory),
+                        }
+                    )
                     .Execute(script.source)
                     .GetValue(entryFunctionName)
                 ;
@@ -321,18 +327,14 @@ namespace SK0520.Plugins.TextIO.Addon
                                 switch (kind)
                                 {
                                     case ScriptResultKind.Text:
-                                        if (resultRawData is null || resultRawData is string)
+                                        return Task.FromResult(new ScriptResponse()
                                         {
-                                            return Task.FromResult(new ScriptResponse()
-                                            {
-                                                Success = true,
-                                                BeginTimestamp = beginTimestamp,
-                                                EndTimestamp = endTimestamp,
-                                                Kind = kind,
-                                                Data = Convert.ToString(resultRawData),
-                                            });
-                                        }
-                                        break;
+                                            Success = true,
+                                            BeginTimestamp = beginTimestamp,
+                                            EndTimestamp = endTimestamp,
+                                            Kind = kind,
+                                            Data = Convert.ToString(resultRawData),
+                                        });
 
                                     default:
                                         break;
