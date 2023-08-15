@@ -318,7 +318,7 @@ namespace SK0520.Plugins.TextIO.Addon
 
                 if (!(result.IsString() || result.IsObject() || result.IsNumber() || result.IsBoolean()) || result.IsArray())
                 {
-                    throw new Exception("undefined " + result);
+                    throw new Exception("result: " + result);
                 }
 
                 var resultObject = result.ToObject();
@@ -341,7 +341,7 @@ namespace SK0520.Plugins.TextIO.Addon
                                             BeginTimestamp = beginTimestamp,
                                             EndTimestamp = endTimestamp,
                                             Kind = kind,
-                                            Data = Convert.ToString(resultRawData),
+                                            Data = resultRawData,
                                         });
 
                                     default:
@@ -360,7 +360,7 @@ namespace SK0520.Plugins.TextIO.Addon
                     BeginTimestamp = beginTimestamp,
                     EndTimestamp = endTimestamp,
                     Kind = ScriptResultKind.Text,
-                    Data = Convert.ToString(resultObject),
+                    Data = resultObject,
                 });
             }
             catch (Exception ex)

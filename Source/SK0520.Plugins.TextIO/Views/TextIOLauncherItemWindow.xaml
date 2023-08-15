@@ -206,10 +206,15 @@
 
 				</Grid>
 
-				<ToolBar Grid.Row="2">
-					<Label Style="{StaticResource ToolbarTitle}">module</Label>
-					<Button Command="{Binding ExecuteCommand}">execute</Button>
-				</ToolBar>
+				<Button
+					Grid.Row="2"
+					FontWeight="Bold"
+					Margin="{StaticResource CommonThickness}"
+					Padding="{StaticResource CommonThickness}"
+					Command="{Binding ExecuteCommand}"
+				>
+					execute
+				</Button>
 			</Grid>
 
 			<GridSplitter Grid.Column="3" Width="{StaticResource GridSplitter}" />

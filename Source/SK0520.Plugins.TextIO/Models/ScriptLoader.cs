@@ -112,6 +112,7 @@ namespace SK0520.Plugins.TextIO.Models
             var parameters = new List<ScriptParameter>();
 
             var metaUpdateUri = string.Empty;
+            var metaDebugHotReload = false;
 
             foreach (var rawHeader in rawHeaders)
             {
@@ -157,8 +158,14 @@ namespace SK0520.Plugins.TextIO.Models
                             }
                             break;
 
+                        case "debug-hot-reload":
+                            {
+                                metaDebugHotReload = Convert.ToBoolean(rawHeader.value);
+                            }
+                            break;
+
                         default:
-                            Logger.LogInformation("ignore: {key} {value}", rawHeader.key, rawHeader.value);
+                            Logger.LogWarning("ignore: {key} {value}", rawHeader.key, rawHeader.value);
                             break;
                     }
                 }
@@ -182,6 +189,7 @@ namespace SK0520.Plugins.TextIO.Models
                 UpdateUri = metaUpdateUri,
                 HashKind = hash.HashKind,
                 HashValue = hash.HashValue,
+                DebugHotReload = metaDebugHotReload,
             };
 
             return new ScriptSetting(head, meta, body);

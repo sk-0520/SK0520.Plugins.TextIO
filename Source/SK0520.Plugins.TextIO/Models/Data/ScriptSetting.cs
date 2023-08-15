@@ -34,6 +34,8 @@ namespace SK0520.Plugins.TextIO.Models.Data
 
         public required string UpdateUri { get; init; }
 
+        public bool DebugHotReload { get; init; } = false;
+
         #endregion
 
         #region IHash

@@ -222,6 +222,18 @@ namespace SK0520.Plugins.TextIO.ViewModels
                 {
                     try
                     {
+                        var meta = Item.GetMeta(SelectedScriptHead.ScriptId);
+                        if (meta.DebugHotReload && Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var updateUri))
+                        {
+                            Logger.LogInformation("[{SCRIPT}] デバッグアップデート確認 {updateUri}", SelectedScriptHead.ScriptId, updateUri);
+                            var scriptSetting = await Item.UpdateScriptIfNewVersionAsync(meta, updateUri);
+                            if (scriptSetting is not null)
+                            {
+                                Logger.LogInformation("[{SCRIPT}] デバッグアップデート実行", SelectedScriptHead.ScriptId);
+                                Item.UpdateScript(scriptSetting);
+                            }
+                        }
+
                         var options = SelectedScriptHead.ParameterCollection
                             .Select(a =>
                             {
@@ -235,13 +247,13 @@ namespace SK0520.Plugins.TextIO.ViewModels
                         ;
                         Logger.LogInformation("[{SCRIPT}] 実行 {options}", SelectedScriptHead.ScriptId, options);
                         var result = await Item.RunScriptAsync(SelectedScriptHead.ScriptId, InputValue, options);
-                        Logger.LogInformation("[{SCRIPT}] <{SUCCESS}> {TIME} - {KIND}: {DATA}", SelectedScriptHead.ScriptId, result.Success ? "Success": "Failure", result.EndTimestamp - result.BeginTimestamp, result.Kind, result.Data);
+                        Logger.LogInformation("[{SCRIPT}] <{SUCCESS}> {TIME} - {KIND}: {DATA}", SelectedScriptHead.ScriptId, result.Success ? "Success" : "Failure", result.EndTimestamp - result.BeginTimestamp, result.Kind, result.Data);
                         if (result.Success)
                         {
                             switch (result.Kind)
                             {
                                 case ScriptResultKind.Text:
-                                    OutputValue = (string)result.Data;
+                                    OutputValue = Convert.ToString(result.Data) ?? string.Empty;
                                     break;
 
                                 default:
@@ -258,7 +270,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
                     catch (Exception ex)
                     {
                         Logger.LogError(ex, ex.Message);
-                        MessageBox.Show(ex.Message);
+                        OutputIsError = true;
+                        OutputValue = SelectedScriptHead.Name + Environment.NewLine + "--------------" + Environment.NewLine + ex.ToString();
                         return;
                     }
                 });

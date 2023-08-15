@@ -13,5 +13,9 @@ namespace SK0520.Plugins.TextIO.Models
         public InjectionText(Guid scriptId, string scriptName, ILoggerFactory loggerFactory)
             : base(scriptId, scriptName, loggerFactory)
         { }
+
+        #region function
+
+        #endregion
     }
 }
