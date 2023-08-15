@@ -278,6 +278,7 @@ namespace SK0520.Plugins.TextIO.Addon
                     new
                     {
                         logger = new InjectionLogger(scriptId, scriptName, LoggerFactory),
+                        text = new InjectionText(scriptId, scriptName, LoggerFactory),
                     }
                 )
                 .Execute(source)

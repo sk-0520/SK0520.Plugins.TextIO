@@ -57,6 +57,7 @@ namespace SK0520.Plugins.TextIO.Models
 
         public void dump(object? obj)
         {
+            // JSON.stringify を噛ませたかったけどやり方わからん
             Logger.LogDebug("[{SCRIPT}] {OBJ}", ScriptId, obj);
         }
 
