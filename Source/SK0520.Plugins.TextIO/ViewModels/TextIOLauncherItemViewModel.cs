@@ -30,6 +30,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         private ScriptHeadViewModel? _scriptHead;
 
+        private ICommand? _allPasteCommand;
         private ICommand? _addScriptCommand;
         private ICommand? _updateScriptCommand;
         private ICommand? _moveUpScriptCommand;
@@ -93,6 +94,13 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #region command
 
+        public ICommand AllPasteCommand => this._allPasteCommand ??= CreateCommand(
+            () =>
+            {
+                
+            }
+        );
+
         public ICommand AddScriptCommand
         {
             get => this._addScriptCommand ??= CreateCommand(
@@ -122,93 +130,81 @@ namespace SK0520.Plugins.TextIO.ViewModels
             );
         }
 
-        public ICommand UpdateScriptCommand
-        {
-            get => this._updateScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
-                o =>
-                {
-                    Task.Run(async () =>
-                    {
-                        try
-                        {
-                            o.ScriptUpdateStatus = ScriptUpdateStatus.Running;
-
-                            var meta = Item.GetMeta(o.ScriptId);
-                            if (!Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var uri))
-                            {
-                                o.ScriptUpdateStatus = ScriptUpdateStatus.None;
-                                Logger.LogInformation("[{PLUGIN}:{SCRIPT}] アップデート対象なし", Item.LauncherItemId, o.ScriptId);
-                                return;
-                            }
-
-                            var scriptSetting = await Item.UpdateScriptIfNewVersionAsync(meta, uri);
-                            if (scriptSetting is null)
-                            {
-                                o.ScriptUpdateStatus = ScriptUpdateStatus.None;
-                                Logger.LogInformation("[{PLUGIN}:{SCRIPT}] アップデート対象なし", Item.LauncherItemId, o.ScriptId);
-                                return;
-                            }
-                            Item.UpdateScript(scriptSetting);
-                            var index = ScriptHeadCollection.IndexOf(o);
-                            if (index != -1)
-                            {
-                                await DispatcherWrapper.BeginAsync(() =>
-                                {
-                                    var newHead = new ScriptHeadViewModel(scriptSetting.Head, Implements, DispatcherWrapper, LoggerFactory);
-                                    ScriptHeadCollection.RemoveAt(index);
-                                    ScriptHeadCollection.Insert(index, newHead);
-                                    SelectedScriptHead = newHead;
-                                    newHead.ScriptUpdateStatus = ScriptUpdateStatus.Success;
-                                });
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            o.ScriptUpdateStatus = ScriptUpdateStatus.Failure;
-                            Logger.LogError(ex, ex.Message);
-                            MessageBox.Show(ex.ToString());
-                        }
-                    });
-                },
-                o => o is not null && o.ScriptUpdateStatus != ScriptUpdateStatus.Running
-            );
-        }
-
-        public ICommand MoveUpScriptCommand
-        {
-            get => this._moveUpScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
-                o => MoveScript(true, o),
-                o => o is not null && ScriptHeadCollection.IndexOf(o) != 0
-            );
-        }
-
-        public ICommand MoveDownScriptCommand
-        {
-            get => this._moveDownScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
-                o => MoveScript(false, o),
-                o => o is not null && ScriptHeadCollection.IndexOf(o) != ScriptHeadCollection.Count - 1
-            );
-        }
-
-        public ICommand RemoveScriptCommand
-        {
-            get => this._removeScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
-                o =>
+        public ICommand UpdateScriptCommand => this._updateScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
+            o =>
+            {
+                Task.Run(async () =>
                 {
                     try
                     {
-                        Item.RemoveScript(o.ScriptId);
-                        ScriptHeadCollection.Remove(o);
+                        o.ScriptUpdateStatus = ScriptUpdateStatus.Running;
+
+                        var meta = Item.GetMeta(o.ScriptId);
+                        if (!Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var uri))
+                        {
+                            o.ScriptUpdateStatus = ScriptUpdateStatus.None;
+                            Logger.LogInformation("[{PLUGIN}:{SCRIPT}] アップデート対象なし", Item.LauncherItemId, o.ScriptId);
+                            return;
+                        }
+
+                        var scriptSetting = await Item.UpdateScriptIfNewVersionAsync(meta, uri);
+                        if (scriptSetting is null)
+                        {
+                            o.ScriptUpdateStatus = ScriptUpdateStatus.None;
+                            Logger.LogInformation("[{PLUGIN}:{SCRIPT}] アップデート対象なし", Item.LauncherItemId, o.ScriptId);
+                            return;
+                        }
+                        Item.UpdateScript(scriptSetting);
+                        var index = ScriptHeadCollection.IndexOf(o);
+                        if (index != -1)
+                        {
+                            await DispatcherWrapper.BeginAsync(() =>
+                            {
+                                var newHead = new ScriptHeadViewModel(scriptSetting.Head, Implements, DispatcherWrapper, LoggerFactory);
+                                ScriptHeadCollection.RemoveAt(index);
+                                ScriptHeadCollection.Insert(index, newHead);
+                                SelectedScriptHead = newHead;
+                                newHead.ScriptUpdateStatus = ScriptUpdateStatus.Success;
+                            });
+                        }
                     }
                     catch (Exception ex)
                     {
+                        o.ScriptUpdateStatus = ScriptUpdateStatus.Failure;
                         Logger.LogError(ex, ex.Message);
                         MessageBox.Show(ex.ToString());
                     }
-                },
-                o => o is not null
-            );
-        }
+                });
+            },
+            o => o is not null && o.ScriptUpdateStatus != ScriptUpdateStatus.Running
+        );
+
+        public ICommand MoveUpScriptCommand => this._moveUpScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
+            o => MoveScript(true, o),
+            o => o is not null && ScriptHeadCollection.IndexOf(o) != 0
+        );
+
+        public ICommand MoveDownScriptCommand => this._moveDownScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
+            o => MoveScript(false, o),
+            o => o is not null && ScriptHeadCollection.IndexOf(o) != ScriptHeadCollection.Count - 1
+        );
+
+        public ICommand RemoveScriptCommand => this._removeScriptCommand ??= CreateCommand<ScriptHeadViewModel>(
+            o =>
+            {
+                try
+                {
+                    Item.RemoveScript(o.ScriptId);
+                    ScriptHeadCollection.Remove(o);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, ex.Message);
+                    MessageBox.Show(ex.ToString());
+                }
+            },
+            o => o is not null
+        );
 
         public ICommand ExecuteCommand => this._executeCommand ??= CreateCommand(
             () =>

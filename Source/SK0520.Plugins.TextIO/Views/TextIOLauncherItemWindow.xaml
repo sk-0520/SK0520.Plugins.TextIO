@@ -64,6 +64,8 @@
 
 				<ToolBar Grid.Row="0">
 					<Label Style="{StaticResource ToolbarTitle}">input</Label>
+					<Button Command="{Binding AllPasteCommand}">all paste</Button>
+					<Label Style="{StaticResource ToolbarTitle}">editor</Label>
 					<Button Command="ApplicationCommands.Copy">copy</Button>
 					<Button Command="ApplicationCommands.Paste">paste</Button>
 				</ToolBar>
@@ -99,8 +101,8 @@
 					<Button Command="{Binding AddScriptCommand}">add</Button>
 					<Button Command="{Binding UpdateScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">update</Button>
 					<Separator />
-					<Button Command="{Binding MoveUpScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">U</Button>
-					<Button Command="{Binding MoveDownScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">D</Button>
+					<Button Command="{Binding MoveUpScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">↑</Button>
+					<Button Command="{Binding MoveDownScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">↓</Button>
 					<Separator />
 					<Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">remove</Button>
 				</ToolBar>
