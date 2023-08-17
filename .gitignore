@@ -4,6 +4,10 @@ obj/
 bin/
 /data/
 /Output/
+/Resource/Icon/*.ico
 
 *.lnk
+@*
+~*
+-*
 
