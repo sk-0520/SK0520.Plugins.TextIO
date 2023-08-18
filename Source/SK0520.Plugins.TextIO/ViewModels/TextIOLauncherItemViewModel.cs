@@ -30,13 +30,14 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         private ScriptHeadViewModel? _scriptHead;
 
-        private ICommand? _allPasteCommand;
+        private ICommand? _inputAllPasteCommand;
         private ICommand? _addScriptCommand;
         private ICommand? _updateScriptCommand;
         private ICommand? _moveUpScriptCommand;
         private ICommand? _moveDownScriptCommand;
         private ICommand? _removeScriptCommand;
         private ICommand? _executeCommand;
+        private ICommand? _outputAllCopyCommand;
 
         #endregion
 
@@ -94,10 +95,14 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #region command
 
-        public ICommand AllPasteCommand => this._allPasteCommand ??= CreateCommand(
+        public ICommand InputAllPasteCommand => this._inputAllPasteCommand ??= CreateCommand(
             () =>
             {
-                
+                if (Clipboard.ContainsText())
+                {
+                    var text = Clipboard.GetText();
+                    InputValue = text;
+                }
             }
         );
 
@@ -249,7 +254,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             switch (result.Kind)
                             {
                                 case ScriptResultKind.Text:
-                                    OutputValue = Convert.ToString(result.Data) ?? string.Empty;
+                                    OutputValue = Item.ConvertString(result.Data);
                                     break;
 
                                 default:
@@ -271,6 +276,16 @@ namespace SK0520.Plugins.TextIO.ViewModels
                         return;
                     }
                 });
+            }
+        );
+
+        public ICommand OutputAllCopyCommand => this._outputAllCopyCommand ??= CreateCommand(
+            () =>
+            {
+                if (!string.IsNullOrEmpty(OutputValue))
+                {
+                    Clipboard.SetText(OutputValue);
+                }
             }
         );
 

@@ -14,12 +14,16 @@ using SK0520.Plugins.TextIO.Models.Data;
 using SK0520.Plugins.TextIO.ViewModels;
 using SK0520.Plugins.TextIO.Views;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 
 namespace SK0520.Plugins.TextIO.Addon
@@ -323,7 +327,7 @@ namespace SK0520.Plugins.TextIO.Addon
                 }
 
                 var resultObject = result.ToObject();
-                if (resultObject is System.Dynamic.ExpandoObject dynamicValue)
+                if (resultObject is ExpandoObject dynamicValue)
                 {
                     var map = (IDictionary<string, object?>)dynamicValue;
 
@@ -374,6 +378,49 @@ namespace SK0520.Plugins.TextIO.Addon
                     EndTimestamp = DateTime.UtcNow,
                     Exception = ex,
                 });
+            }
+        }
+
+        public string ConvertString(object? data)
+        {
+            switch (data)
+            {
+                case null:
+                    return string.Empty;
+
+                case string s:
+                    return s;
+
+                case byte or System.SByte:
+                case char:
+                case short or ushort:
+                case int or uint:
+                case float or double:
+                case decimal:
+                    return Convert.ToString(data) ?? string.Empty;
+
+                case DateTime dt:
+                    return dt.ToString("U");
+
+                default:
+                    break;
+            }
+
+            try
+            {
+                return System.Text.Json.JsonSerializer.Serialize(
+                    data,
+                    new JsonSerializerOptions()
+                    {
+                        WriteIndented = true,
+                        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning(ex, ex.Message);
+                return ObjectDumper.Dump(data);
             }
         }
 

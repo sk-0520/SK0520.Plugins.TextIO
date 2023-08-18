@@ -64,7 +64,7 @@
 
 				<ToolBar Grid.Row="0">
 					<Label Style="{StaticResource ToolbarTitle}">input</Label>
-					<Button Command="{Binding AllPasteCommand}">all paste</Button>
+					<Button Command="{Binding InputAllPasteCommand}">all paste</Button>
 					<Label Style="{StaticResource ToolbarTitle}">editor</Label>
 					<Button Command="ApplicationCommands.Copy">copy</Button>
 					<Button Command="ApplicationCommands.Paste">paste</Button>
@@ -72,7 +72,7 @@
 
 				<TextBox 
 					Grid.Row="1" 
-					Text="{Binding InputValue}"
+					Text="{Binding InputValue, UpdateSourceTrigger=PropertyChanged}"
 				>
 					<TextBox.Style>
 						<Style TargetType="TextBox" BasedOn="{StaticResource Editor}">
@@ -115,11 +115,11 @@
 					</Grid.RowDefinitions>
 
 					<ListBox 
-												Grid.Row="0" 
-												Margin="{StaticResource CommonThickness}" 
-												ItemsSource="{Binding ScriptHeadCollection}"
-												SelectedItem="{Binding SelectedScriptHead}"
-										>
+						Grid.Row="0" 
+						Margin="{StaticResource CommonThickness}" 
+						ItemsSource="{Binding ScriptHeadCollection}"
+						SelectedItem="{Binding SelectedScriptHead}"
+					>
 						<ListBox.ItemTemplate>
 							<DataTemplate>
 								<TextBlock Text="{Binding Name}" />
@@ -229,6 +229,8 @@
 
 				<ToolBar Grid.Row="0">
 					<Label Style="{StaticResource ToolbarTitle}">output</Label>
+					<Button Command="{Binding OutputAllCopyCommand}">all copy</Button>
+					<Label Style="{StaticResource ToolbarTitle}">editor</Label>
 					<Button Command="ApplicationCommands.Copy">copy</Button>
 				</ToolBar>
 
