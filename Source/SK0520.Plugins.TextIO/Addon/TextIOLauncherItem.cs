@@ -391,6 +391,7 @@ namespace SK0520.Plugins.TextIO.Addon
                 case string s:
                     return s;
 
+                case bool:
                 case byte or System.SByte:
                 case char:
                 case short or ushort:
