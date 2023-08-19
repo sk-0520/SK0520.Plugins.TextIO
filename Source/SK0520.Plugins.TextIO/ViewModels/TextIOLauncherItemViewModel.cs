@@ -27,7 +27,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
         private string _inputValue = string.Empty;
         private string _outputValue = string.Empty;
         private bool _outputIsError = false;
-        private bool _isVisibleProperty = false;
+        private ScriptPropertyViewModel? _scriptProperty = null;
 
         private ScriptHeadViewModel? _scriptHead;
 
@@ -41,6 +41,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
         private ICommand? _showPropertyCommand;
         private ICommand? _hidePropertyCommand;
         private ICommand? _outputAllCopyCommand;
+        private ICommand? _openUpdateUriCommand;
 
         #endregion
 
@@ -81,12 +82,6 @@ namespace SK0520.Plugins.TextIO.ViewModels
             set => SetProperty(ref this._outputIsError, value);
         }
 
-        public bool IsVisibleProperty
-        {
-            get => this._isVisibleProperty;
-            private set => SetProperty(ref this._isVisibleProperty, value);
-        }
-
         public ObservableCollection<ScriptHeadViewModel> ScriptHeadCollection { get; }
         public ScriptHeadViewModel? SelectedScriptHead
         {
@@ -99,6 +94,12 @@ namespace SK0520.Plugins.TextIO.ViewModels
         }
 
         public bool IsSelectedScriptHead => SelectedScriptHead is not null;
+
+        public ScriptPropertyViewModel? ScriptProperty
+        {
+            get => this._scriptProperty;
+            private set => SetProperty(ref this._scriptProperty, value);
+        }
 
         #endregion
 
@@ -299,16 +300,17 @@ namespace SK0520.Plugins.TextIO.ViewModels
                     return;
                 }
 
+                var head = Item.GetHead(SelectedScriptHead.ScriptId);
                 var meta = Item.GetMeta(SelectedScriptHead.ScriptId);
 
-                IsVisibleProperty = true;
+                ScriptProperty = new ScriptPropertyViewModel(head, meta, Implements, DispatcherWrapper, LoggerFactory);
             }
         );
 
         public ICommand HidePropertyCommand => this._hidePropertyCommand ??= CreateCommand(
             () =>
             {
-                IsVisibleProperty = false;
+                ScriptProperty = null;
             }
         );
 
@@ -320,6 +322,14 @@ namespace SK0520.Plugins.TextIO.ViewModels
                     Clipboard.SetText(OutputValue);
                 }
             }
+        );
+
+        public ICommand OpenUpdateUriCommand => this._openUpdateUriCommand ??= CreateCommand<ScriptPropertyViewModel>(
+            o =>
+            {
+                Item.ExecuteUri(o.UpdateUri);
+            },
+            o => o is not null
         );
 
         #endregion

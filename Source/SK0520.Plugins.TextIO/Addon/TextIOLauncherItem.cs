@@ -99,6 +99,32 @@ namespace SK0520.Plugins.TextIO.Addon
             return result;
         }
 
+        public ScriptHeadSetting GetHeadCore(Guid scriptId, ILauncherItemAddonPersistence persistence)
+        {
+            persistence.Normal.TryGet<ScriptHeadSetting?>(LauncherItemId, ToHeadKey(scriptId), out var result);
+            if (result is null)
+            {
+                throw new KeyNotFoundException(scriptId.ToString());
+            }
+
+            return result;
+        }
+
+        public ScriptHeadSetting GetHead(Guid scriptId)
+        {
+            ScriptHeadSetting? result = null;
+
+            ContextWorker.RunLauncherItemAddon(c =>
+            {
+                result = GetHeadCore(scriptId, c.Storage.Persistence);
+                return false;
+            });
+
+            Debug.Assert(result is not null);
+
+            return result;
+        }
+
         private ScriptMetaSetting GetMetaCore(Guid scriptId, ILauncherItemAddonPersistence persistence)
         {
             persistence.Normal.TryGet<ScriptMetaSetting?>(LauncherItemId, ToMetaKey(scriptId), out var result);
@@ -423,6 +449,11 @@ namespace SK0520.Plugins.TextIO.Addon
                 Logger.LogWarning(ex, ex.Message);
                 return ObjectDumper.Dump(data);
             }
+        }
+
+        public void ExecuteUri(string uri)
+        {
+            AddonExecutor.Execute(uri);
         }
 
         #endregion
