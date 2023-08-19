@@ -346,99 +346,117 @@
 						Direction="0"
 					/>
 				</Border.Effect>
-				<FlowDocumentScrollViewer>
-					<FlowDocument>
-						<Table>
-							<Table.Columns>
-								<TableColumn Width="3*" />
-								<TableColumn Width="7*" />
-							</Table.Columns>
-							<TableRowGroup>
-								<TableRow
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+					<FlowDocumentScrollViewer
+						Grid.Row="0"
+						IsSelectionEnabled="False"
+						ContextMenuService.IsEnabled="False"
+					>
+						<FlowDocument>
+							<Table>
+								<Table.Columns>
+									<TableColumn Width="3*" />
+									<TableColumn Width="7*" />
+								</Table.Columns>
+								<TableRowGroup>
+									<TableRow
 									FontWeight="Bold"
 									Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}"
 									Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}"
 								>
-									<TableCell>
-										<Paragraph>項目</Paragraph>
-									</TableCell>
-									<TableCell>
-										<Paragraph>値</Paragraph>
-									</TableCell>
-								</TableRow>
+										<TableCell>
+											<Paragraph>項目</Paragraph>
+										</TableCell>
+										<TableCell>
+											<Paragraph>値</Paragraph>
+										</TableCell>
+									</TableRow>
 
-								<TableRow>
-									<TableCell>
-										<Paragraph>スクリプトID</Paragraph>
-									</TableCell>
-									<TableCell>
-										<Paragraph>
-											<Run Text="{Binding ScriptProperty.ScriptId, Mode=OneWay}" />
-										</Paragraph>
-									</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>
-										<Paragraph>スクリプト名</Paragraph>
-									</TableCell>
-									<TableCell>
-										<Paragraph>
-											<Run Text="{Binding ScriptProperty.Name, Mode=OneWay}" />
-										</Paragraph>
-									</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>
-										<Paragraph>登録日時</Paragraph>
-									</TableCell>
-									<TableCell>
-										<Paragraph>
-											<Run Text="{Binding ScriptProperty.CreatedTimestamp, Mode=OneWay}" />
-										</Paragraph>
-									</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>
-										<Paragraph>アップデート日時</Paragraph>
-									</TableCell>
-									<TableCell>
-										<Paragraph>
-											<Run Text="{Binding ScriptProperty.UpdatedTimestamp, Mode=OneWay}" />
-										</Paragraph>
-									</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>
-										<Paragraph>更新URI</Paragraph>
-									</TableCell>
-									<TableCell>
-										<Paragraph>
-											<Hyperlink Command="{Binding OpenUpdateUriCommand}" CommandParameter="{Binding ScriptProperty}">
-												<Run Text="{Binding ScriptProperty.UpdateUri, Mode=OneWay}" />
-											</Hyperlink>
-										</Paragraph>
-									</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>
-										<Paragraph>ハッシュ</Paragraph>
-									</TableCell>
-									<TableCell>
-										<Paragraph>
-											<Run Text="{Binding ScriptProperty.HashKind, Mode=OneWay}" />
-										</Paragraph>
-										<Paragraph>
-											<TextBox
+									<TableRow>
+										<TableCell>
+											<Paragraph>スクリプトID</Paragraph>
+										</TableCell>
+										<TableCell>
+											<Paragraph>
+												<Run Text="{Binding ScriptProperty.ScriptId, Mode=OneWay}" />
+											</Paragraph>
+										</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>
+											<Paragraph>スクリプト名</Paragraph>
+										</TableCell>
+										<TableCell>
+											<Paragraph>
+												<Run Text="{Binding ScriptProperty.Name, Mode=OneWay}" />
+											</Paragraph>
+										</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>
+											<Paragraph>登録日時</Paragraph>
+										</TableCell>
+										<TableCell>
+											<Paragraph>
+												<Run Text="{Binding ScriptProperty.CreatedTimestamp, Mode=OneWay}" />
+											</Paragraph>
+										</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>
+											<Paragraph>アップデート日時</Paragraph>
+										</TableCell>
+										<TableCell>
+											<Paragraph>
+												<Run Text="{Binding ScriptProperty.UpdatedTimestamp, Mode=OneWay}" />
+											</Paragraph>
+										</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>
+											<Paragraph>更新URI</Paragraph>
+										</TableCell>
+										<TableCell>
+											<Paragraph>
+												<Hyperlink Command="{Binding OpenUpdateUriCommand}" CommandParameter="{Binding ScriptProperty}">
+													<Run Text="{Binding ScriptProperty.UpdateUri, Mode=OneWay}" />
+												</Hyperlink>
+											</Paragraph>
+										</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>
+											<Paragraph>ハッシュ</Paragraph>
+										</TableCell>
+										<TableCell>
+											<Paragraph>
+												<Run Text="{Binding ScriptProperty.HashKind, Mode=OneWay}" />
+											</Paragraph>
+											<Paragraph>
+												<TextBox
 												IsReadOnly="True"
 												Text="{Binding ScriptProperty.HashValue, Mode=OneWay}"
 											/>
-										</Paragraph>
-									</TableCell>
-								</TableRow>
-							</TableRowGroup>
-						</Table>
-					</FlowDocument>
-				</FlowDocumentScrollViewer>
+											</Paragraph>
+										</TableCell>
+									</TableRow>
+								</TableRowGroup>
+							</Table>
+						</FlowDocument>
+					</FlowDocumentScrollViewer>
+					<Button
+						Grid.Row="1"
+						Margin="10"
+						Padding="10"
+						Command="{Binding HidePropertyCommand}"
+					>
+						close
+					</Button>
+				</Grid>
 			</Border>
 		</Grid>
 	</Grid>
