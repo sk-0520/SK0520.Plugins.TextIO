@@ -129,7 +129,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
                     catch (Exception ex)
                     {
                         Logger.LogError(ex, ex.Message);
-                        MessageBox.Show(ex.ToString());
+                        OutputIsError = true;
+                        OutputValue = ex.ToString();
                     }
                 }
             );
@@ -177,7 +178,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
                     {
                         o.ScriptUpdateStatus = ScriptUpdateStatus.Failure;
                         Logger.LogError(ex, ex.Message);
-                        MessageBox.Show(ex.ToString());
+                        OutputIsError = true;
+                        OutputValue = o.Name + Environment.NewLine + "--------------" + Environment.NewLine + ex.ToString();
                     }
                 });
             },

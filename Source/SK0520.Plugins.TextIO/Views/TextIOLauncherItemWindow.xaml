@@ -208,15 +208,36 @@
 
 				</Grid>
 
-				<Button
-					Grid.Row="2"
-					FontWeight="Bold"
-					Margin="{StaticResource CommonThickness}"
-					Padding="{StaticResource CommonThickness}"
-					Command="{Binding ExecuteCommand}"
-				>
-					execute
-				</Button>
+				<Grid Grid.Row="2">
+					<Grid.Resources>
+						<Style TargetType="Button">
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding SelectedScriptHead}" Value="{x:Null}">
+									<Setter Property="IsEnabled" Value="False" />
+								</DataTrigger>
+							</Style.Triggers>
+							<Setter Property="Margin" Value="{StaticResource CommonThickness}" />
+							<Setter Property="Padding" Value="{StaticResource CommonThickness}" />
+							<Setter Property="IsEnabled" Value="True" />
+						</Style>
+					</Grid.Resources>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="6*" />
+						<ColumnDefinition Width="4*" />
+					</Grid.ColumnDefinitions>
+					<Button
+						Grid.Column="0"
+						FontWeight="Bold"
+						Command="{Binding ExecuteCommand}"
+					>
+						execute
+					</Button>
+					<Button
+						Grid.Column="1"
+					>
+						property
+					</Button>
+				</Grid>
 			</Grid>
 
 			<GridSplitter Grid.Column="3" Width="{StaticResource GridSplitter}" />
