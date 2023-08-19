@@ -27,6 +27,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
         private string _inputValue = string.Empty;
         private string _outputValue = string.Empty;
         private bool _outputIsError = false;
+        private bool _isVisibleProperty = false;
 
         private ScriptHeadViewModel? _scriptHead;
 
@@ -37,6 +38,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
         private ICommand? _moveDownScriptCommand;
         private ICommand? _removeScriptCommand;
         private ICommand? _executeCommand;
+        private ICommand? _showPropertyCommand;
+        private ICommand? _hidePropertyCommand;
         private ICommand? _outputAllCopyCommand;
 
         #endregion
@@ -76,6 +79,12 @@ namespace SK0520.Plugins.TextIO.ViewModels
         {
             get => this._outputIsError;
             set => SetProperty(ref this._outputIsError, value);
+        }
+
+        public bool IsVisibleProperty
+        {
+            get => this._isVisibleProperty;
+            private set => SetProperty(ref this._isVisibleProperty, value);
         }
 
         public ObservableCollection<ScriptHeadViewModel> ScriptHeadCollection { get; }
@@ -278,6 +287,28 @@ namespace SK0520.Plugins.TextIO.ViewModels
                         return;
                     }
                 });
+            }
+        );
+
+        public ICommand ShowPropertyCommand => this._showPropertyCommand ??= CreateCommand(
+            () =>
+            {
+                if (SelectedScriptHead is null)
+                {
+                    Logger.LogDebug("対象スクリプト未選択");
+                    return;
+                }
+
+                var meta = Item.GetMeta(SelectedScriptHead.ScriptId);
+
+                IsVisibleProperty = true;
+            }
+        );
+
+        public ICommand HidePropertyCommand => this._hidePropertyCommand ??= CreateCommand(
+            () =>
+            {
+                IsVisibleProperty = false;
             }
         );
 
