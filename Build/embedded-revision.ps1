@@ -28,11 +28,11 @@ $projectXml = [XML](Get-Content $ProjectFilePath  -Encoding UTF8)
 
 InsertElement $Revision $projectXml '/Project/PropertyGroup[1]/InformationalVersion[1]' '/Project/PropertyGroup[1]' 'InformationalVersion'
 
-$repMap = @{
-    '@YYYY@' = (Get-Date).Year
-    '@NAME@' = 'sk'
-    '@SITE@' = 'content-type-text.net'
-}
+# $repMap = @{
+#     '@YYYY@' = (Get-Date).Year
+#     '@NAME@' = 'sk'
+#     '@SITE@' = 'content-type-text.net'
+# }
 #ReplaceElement $repMap $projectXml '/Project/PropertyGroup[1]/Copyright[1]' '/Project/PropertyGroup[1]' 'Copyright'
 
 $projectCommonXml.Save($projectXml)
