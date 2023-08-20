@@ -18,6 +18,10 @@ jobs:
         with:
           msbuild-architecture: x64
 
+      - name: <Embedded> git revision
+        shell: pwsh
+        run: .\Build\embedded-revision.ps1 -Revision ${{ github.sha }} -ProjectFilePath .\Source\Directory.Build.props
+
       - name: <Build> Plugin
         shell: pwsh
         run: .\FullBuild.ps1
