@@ -13,12 +13,27 @@ function InsertElement([string] $value, [xml] $xml, [string] $targetXpath, [stri
     }
 }
 
-echo "Revision: $Revision"
-echo "ProjectFilePath: $ProjectFilePath"
+function ReplaceElement([hashtable] $map, [xml] $xml, [string] $targetXpath, [string] $parentXpath, [string] $elementName) {
+    $element = $xml.SelectSingleNode($targetXpath);
+    if ($null -ne $element) {
+        $val = $element.InnerText
+        foreach ($key in $map.keys) {
+            $val = $val.Replace($key, $map[$key])
+        }
+        $element.InnerText = $val
+    }
+}
 
 $projectXml = [XML](Get-Content $ProjectFilePath  -Encoding UTF8)
 
 InsertElement $Revision $projectXml '/Project/PropertyGroup[1]/InformationalVersion[1]' '/Project/PropertyGroup[1]' 'InformationalVersion'
+$repMap = @{
+    '@YYYY@' = (Get-Date).Year
+    '@NAME@' = 'sk'
+    '@SITE@' = 'content-type-text.net'
+}
+ReplaceElement $repMap $projectXml '/Project/PropertyGroup[1]/Copyright[1]' '/Project/PropertyGroup[1]' 'Copyright'
+$projectCommonXml.Save($projectXml)
 
 $projectXml.Save($ProjectFilePath)
 
