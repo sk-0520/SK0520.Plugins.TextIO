@@ -1,5 +1,7 @@
 cd /d %~dp0
 
+set GIT_SSH=%PROGRAMFILES%\TortoiseGit\bin\TortoiseGitPlink.exe
+
 set V2SHELL=%PROGRAMFILES%\Git\bin\sh.exe 
 if exist "%V2SHELL%" (
 	"%V2SHELL%" %*
