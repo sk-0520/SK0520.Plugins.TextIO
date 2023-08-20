@@ -9,7 +9,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Product>Plugin</Product>
-    <Copyright>Copyright © &lt;2023&gt;-&lt;YYYY&gt; &lt;sk&gt; &lt;https://content-type-text.net/&gt;</Copyright>
+    <Copyright>Copyright © &lt;2023&gt;-&lt;@YYYY@&gt; &lt;@NAME@&gt; &lt;@SITE@&gt;</Copyright>
     <Configurations>Debug;Release</Configurations>
     <PathMap>$(MSBuildThisFileDirectory)=.</PathMap>
   </PropertyGroup>
