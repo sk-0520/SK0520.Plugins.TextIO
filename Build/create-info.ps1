@@ -31,8 +31,8 @@ function Get-VersionText {
 	)
 	return @(
 			"{0}" -f $Value.Major
-			"{0}" -f $Value.Minor
-			"{0}" -f $Value.Build
+			"{0:00}"  -f $cliVesion.Minor
+			"{0:000}" -f $cliVesion.Build
 	) -join '.'
 }
 
@@ -43,8 +43,8 @@ function New-UpdateItem([string] $archiveFilePath) {
 		revision           = $revision
 		platform           = $platform
 		minimum_version    = Get-VersionText $MinimumVersion
-		note_uri           = $ReleaseNoteUrl.Replace("@VERSION@", $Version)
-		archive_uri        = $ArchiveBaseUrl.Replace("@ARCHIVENAME@", (Split-Path $archiveFilePath -Leaf))
+		note_uri           = $ReleaseNoteUrl.Replace("@VERSION@", (Get-VersionText　$Version))
+		archive_uri        = $ArchiveBaseUrl.Replace("@ARCHIVENAME@", (Split-Path $archiveFilePath -Leaf)).Replace("@VERSION@", (Get-VersionText　$Version))
 		archive_size       = (Get-Item -Path $archiveFilePath).Length
 		archive_kind       = $Archive
 		archive_hash_kind  = $hashAlgorithm
