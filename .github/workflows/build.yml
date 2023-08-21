@@ -59,7 +59,7 @@ jobs:
       - build
       - test
 
-    if: github.ref == 'refs/heads/master'
+    #if: github.ref == 'refs/heads/master'
 
     runs-on: ubuntu-latest
 
@@ -73,3 +73,10 @@ jobs:
           name: Plugin
           path: Output
 
+      - name: <Add> get-net-sdk-project-versions-action
+        uses: kzrnm/get-net-sdk-project-versions-action@v1
+        id: get-version
+        with:
+          proj-path: Source/Directory.Build.props
+
+      - run: echo "${{steps.get-version.outputs.version}}"
