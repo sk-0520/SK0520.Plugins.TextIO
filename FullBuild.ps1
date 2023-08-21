@@ -9,8 +9,8 @@ $pluginShortName = 'TextIO'
 $pluginId = 'd18d1b03-549d-4753-8cbc-f8b230131ec2'
 
 $minimumVersion = [version]"0.0.0"
-$archiveBaseUrl = "https://excample.com/download?@ARCHIVENAME@"
-$releaseNoteUrl = "https://excample.com/release?@VERSION@"
+$archiveBaseUrl = "https://github.com/sk-0520/SK0520.Plugins.TextIO/releases/latest/@ARCHIVENAME@"
+$releaseNoteUrl = "https://github.com/sk-0520/SK0520.Plugins.TextIO/releases/latest/${pluginName}.json"
 $archive = 'zip'
 
 $scriptDirPath = Join-Path -Path $currentDirPath -ChildPath 'Build'
