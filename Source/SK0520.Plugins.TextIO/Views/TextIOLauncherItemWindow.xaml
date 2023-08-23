@@ -20,25 +20,31 @@
 	xmlns:datacontext="clr-namespace:SK0520.Plugins.TextIO.ViewModels" d:DataContext="{d:DesignInstance Type=datacontext:TextIOLauncherItemViewModel}"
 >
 	<Window.Resources>
-		<system:Double x:Key="GridSplitter">3</system:Double>
-		<Thickness x:Key="CommonThickness">3</Thickness>
-		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-		<views_conveter:RadioButtonNegativeConverter x:Key="RadioButtonNegativeConverter" />
-		<Style x:Key="ToolbarTitle" TargetType="Label">
-			<Setter Property="FontWeight" Value="Bold" />
-		</Style>
-		<Style x:Key="Editor" TargetType="TextBox">
-			<Style.Triggers>
-				<Trigger Property="IsReadOnly" Value="True">
-					<Setter Property="UndoLimit" Value="0" />
-				</Trigger>
-			</Style.Triggers>
-			<Setter Property="Margin" Value="{StaticResource CommonThickness}" />
-			<Setter Property="AcceptsReturn" Value="True" />
-			<Setter Property="AcceptsTab" Value="True" />
-			<Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-			<Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
-		</Style>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/Pe.Bridge;Component/Views/Resources/Image.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<system:Double x:Key="GridSplitter">3</system:Double>
+			<Thickness x:Key="CommonThickness">3</Thickness>
+			<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+			<views_conveter:RadioButtonNegativeConverter x:Key="RadioButtonNegativeConverter" />
+			<Style x:Key="ToolbarTitle" TargetType="Label">
+				<Setter Property="FontWeight" Value="Bold" />
+			</Style>
+			<Style x:Key="Editor" TargetType="TextBox">
+				<Style.Triggers>
+					<Trigger Property="IsReadOnly" Value="True">
+						<Setter Property="UndoLimit" Value="0" />
+					</Trigger>
+				</Style.Triggers>
+				<Setter Property="Margin" Value="{StaticResource CommonThickness}" />
+				<Setter Property="AcceptsReturn" Value="True" />
+				<Setter Property="AcceptsTab" Value="True" />
+				<Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+				<Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+			</Style>
+		</ResourceDictionary>
 	</Window.Resources>
 
 	<Grid>
@@ -101,8 +107,12 @@
 					<Button Command="{Binding AddScriptCommand}">add</Button>
 					<Button Command="{Binding UpdateScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">update</Button>
 					<Separator />
-					<Button Command="{Binding MoveUpScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">↑</Button>
-					<Button Command="{Binding MoveDownScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">↓</Button>
+					<Button Command="{Binding MoveUpScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">
+						<Control Template="{StaticResource App-Image-Up}" />
+					</Button>
+					<Button Command="{Binding MoveDownScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">
+						<Control Template="{StaticResource App-Image-Down}" />
+					</Button>
 					<Separator />
 					<Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">remove</Button>
 				</ToolBar>

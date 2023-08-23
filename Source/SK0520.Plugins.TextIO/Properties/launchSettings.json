@@ -1,10 +1,14 @@
 {
-	"profiles": {
-		"Plugin:Debug": {
-			"commandName": "Executable",
-			"executablePath": ".\\Pe\\Source\\Pe\\Pe.Main\\bin\\$(Platform)\\$(Configuration)\\$(TargetFramework)\\Pe.Main.exe",
-			"commandLineArgs": "--debug-dev-mode --log=$(SolutionDir)..\\data\\log --force-log --full-trace-log --user-dir=$(SolutionDir)..\\data\\user --machine-dir=$(SolutionDir)..\\data\\machine --temp-dir=$(SolutionDir)..\\data\\temp  --test-plugin-name $(TargetName) --test-plugin-dir \".\\$(ProjectName)\\bin\\$(Platform)\\$(Configuration)/$(TargetFramework)\"",
-			"workingDirectory": "$(SolutionDir)"
-		}
-	}
+  "profiles": {
+    "Plugin:Debug": {
+      "commandName": "Executable",
+      "executablePath": ".\\Pe\\Source\\Pe\\Pe.Main\\bin\\$(Platform)\\$(Configuration)\\$(TargetFramework)\\Pe.Main.exe",
+      "commandLineArgs": "--debug-dev-mode --log=$(SolutionDir)..\\data\\log --force-log --full-trace-log --user-dir=$(SolutionDir)..\\data\\user --machine-dir=$(SolutionDir)..\\data\\machine --temp-dir=$(SolutionDir)..\\data\\temp  --test-plugin-name $(TargetName) --test-plugin-dir \".\\$(ProjectName)\\bin\\$(Platform)\\$(Configuration)/$(TargetFramework)\"",
+      "workingDirectory": "$(SolutionDir)",
+      "environmentVariables": {
+        "DEBUG_BOOT_MODE": "launcher",
+        "DEBUG_BOOT_ITEM": "c30c2185-e388-4c54-9312-1f997c18aad9"
+      }
+    }
+  }
 }
