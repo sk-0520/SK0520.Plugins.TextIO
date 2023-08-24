@@ -231,63 +231,72 @@ namespace SK0520.Plugins.TextIO.ViewModels
                     Logger.LogDebug("対象スクリプト未選択");
                     return;
                 }
-                _ = Task.Run(async () =>
+
+                IsRunning = true;
+                try
                 {
-                    try
+                    _ = Task.Run(async () =>
                     {
-                        var meta = Item.GetMeta(SelectedScriptHead.ScriptId);
-                        if (meta.DebugHotReload && Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var updateUri))
+                        try
                         {
-                            Logger.LogInformation("[{SCRIPT}] デバッグアップデート確認 {updateUri}", SelectedScriptHead.ScriptId, updateUri);
-                            var scriptSetting = await Item.UpdateScriptIfNewVersionAsync(meta, updateUri);
-                            if (scriptSetting is not null)
+                            var meta = Item.GetMeta(SelectedScriptHead.ScriptId);
+                            if (meta.DebugHotReload && Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var updateUri))
                             {
-                                Logger.LogInformation("[{SCRIPT}] デバッグアップデート実行", SelectedScriptHead.ScriptId);
-                                Item.UpdateScript(scriptSetting);
-                            }
-                        }
-
-                        var options = SelectedScriptHead.ParameterCollection
-                            .Select(a =>
-                            {
-                                if (a.IsRequired && a.RawValue is null)
+                                Logger.LogInformation("[{SCRIPT}] デバッグアップデート確認 {updateUri}", SelectedScriptHead.ScriptId, updateUri);
+                                var scriptSetting = await Item.UpdateScriptIfNewVersionAsync(meta, updateUri);
+                                if (scriptSetting is not null)
                                 {
-                                    throw new InvalidDataException(a.Display);
+                                    Logger.LogInformation("[{SCRIPT}] デバッグアップデート実行", SelectedScriptHead.ScriptId);
+                                    Item.UpdateScript(scriptSetting);
                                 }
-                                return a;
-                            })
-                            .ToDictionary(k => k.Name, v => v.RawValue)
-                        ;
-                        Logger.LogInformation("[{SCRIPT}] 実行 {options}", SelectedScriptHead.ScriptId, options);
-                        var result = await Item.RunScriptAsync(SelectedScriptHead.ScriptId, InputValue, options);
-                        Logger.LogInformation("[{SCRIPT}] <{SUCCESS}> {TIME} - {KIND}: {DATA}", SelectedScriptHead.ScriptId, result.Success ? "Success" : "Failure", result.EndTimestamp - result.BeginTimestamp, result.Kind, result.Data);
-                        if (result.Success)
-                        {
-                            switch (result.Kind)
-                            {
-                                case ScriptResultKind.Text:
-                                    OutputValue = Item.ConvertString(result.Data);
-                                    break;
-
-                                default:
-                                    throw new NotImplementedException();
                             }
-                            OutputIsError = false;
+
+                            var options = SelectedScriptHead.ParameterCollection
+                                .Select(a =>
+                                {
+                                    if (a.IsRequired && a.RawValue is null)
+                                    {
+                                        throw new InvalidDataException(a.Display);
+                                    }
+                                    return a;
+                                })
+                                .ToDictionary(k => k.Name, v => v.RawValue)
+                            ;
+                            Logger.LogInformation("[{SCRIPT}] 実行 {options}", SelectedScriptHead.ScriptId, options);
+                            var result = await Item.RunScriptAsync(SelectedScriptHead.ScriptId, InputValue, options);
+                            Logger.LogInformation("[{SCRIPT}] <{SUCCESS}> {TIME} - {KIND}: {DATA}", SelectedScriptHead.ScriptId, result.Success ? "Success" : "Failure", result.EndTimestamp - result.BeginTimestamp, result.Kind, result.Data);
+                            if (result.Success)
+                            {
+                                switch (result.Kind)
+                                {
+                                    case ScriptResultKind.Text:
+                                        OutputValue = Item.ConvertString(result.Data);
+                                        break;
+
+                                    default:
+                                        throw new NotImplementedException();
+                                }
+                                OutputIsError = false;
+                            }
+                            else
+                            {
+                                OutputIsError = true;
+                                OutputValue = SelectedScriptHead.Name + Environment.NewLine + "--------------" + Environment.NewLine + result.Exception.ToString();
+                            }
                         }
-                        else
+                        catch (Exception ex)
                         {
+                            Logger.LogError(ex, ex.Message);
                             OutputIsError = true;
-                            OutputValue = SelectedScriptHead.Name + Environment.NewLine + "--------------" + Environment.NewLine + result.Exception.ToString();
+                            OutputValue = SelectedScriptHead.Name + Environment.NewLine + "--------------" + Environment.NewLine + ex.ToString();
+                            return;
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.LogError(ex, ex.Message);
-                        OutputIsError = true;
-                        OutputValue = SelectedScriptHead.Name + Environment.NewLine + "--------------" + Environment.NewLine + ex.ToString();
-                        return;
-                    }
-                });
+                    });
+                }
+                finally
+                {
+                    IsRunning = false;
+                }
             }
         );
 

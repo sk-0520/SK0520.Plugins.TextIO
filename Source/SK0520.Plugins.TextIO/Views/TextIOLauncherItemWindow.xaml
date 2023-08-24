@@ -6,8 +6,8 @@
 
 	xmlns:views_conveter="clr-namespace:SK0520.Plugins.TextIO.Views.Converter"
 
-	Title="TextIOLauncherItemWindow" 
-	Height="450" 
+	Title="SK0520.Plugins.TextIO" 
+	Height="460" 
 	Width="800"
 	WindowStartupLocation="CenterScreen"
 	ResizeMode="CanResizeWithGrip"
@@ -31,6 +31,22 @@
 			<views_conveter:RadioButtonNegativeConverter x:Key="RadioButtonNegativeConverter" />
 			<Style x:Key="ToolbarTitle" TargetType="Label">
 				<Setter Property="FontWeight" Value="Bold" />
+			</Style>
+			<Style x:Key="ToolbarLabelButton" TargetType="StackPanel">
+				<Style.Resources>
+					<Style TargetType="Control">
+						<Style.Triggers>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Opacity" Value="0.8" />
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+					<Style TargetType="Label">
+						<Setter Property="Margin" Value="0" />
+						<Setter Property="Padding" Value="2" />
+					</Style>
+				</Style.Resources>
+				<Setter Property="Orientation" Value="Horizontal" />
 			</Style>
 			<Style x:Key="Editor" TargetType="TextBox">
 				<Style.Triggers>
@@ -69,11 +85,20 @@
 				</Grid.RowDefinitions>
 
 				<ToolBar Grid.Row="0">
-					<Label Style="{StaticResource ToolbarTitle}">input</Label>
-					<Button Command="{Binding InputAllPasteCommand}">all paste</Button>
-					<Label Style="{StaticResource ToolbarTitle}">editor</Label>
-					<Button Command="ApplicationCommands.Copy">copy</Button>
-					<Button Command="ApplicationCommands.Paste">paste</Button>
+					<Label Style="{StaticResource ToolbarTitle}">入力</Label>
+					<Button Command="{Binding InputAllPasteCommand}">
+						<StackPanel Style="{StaticResource ToolbarLabelButton}">
+							<Control Template="{StaticResource App-Image-Clipboard-Paste}" />
+							<Label Content="全て貼り付け" />
+						</StackPanel>
+					</Button>
+					<Label Style="{StaticResource ToolbarTitle}">エディタ</Label>
+					<Button Command="ApplicationCommands.Copy">
+						<Control Template="{StaticResource App-Image-Clipboard-Copy}" />
+					</Button>
+					<Button Command="ApplicationCommands.Paste">
+						<Control Template="{StaticResource App-Image-Clipboard-Paste}" />
+					</Button>
 				</ToolBar>
 
 				<TextBox 
@@ -103,9 +128,19 @@
 				</Grid.RowDefinitions>
 
 				<ToolBar Grid.Row="0">
-					<Label Style="{StaticResource ToolbarTitle}">source</Label>
-					<Button Command="{Binding AddScriptCommand}">add</Button>
-					<Button Command="{Binding UpdateScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">update</Button>
+					<Label Style="{StaticResource ToolbarTitle}">ソース</Label>
+					<Button Command="{Binding AddScriptCommand}">
+						<StackPanel Style="{StaticResource ToolbarLabelButton}">
+							<Control Template="{StaticResource App-Image-Add}" />
+							<Label Content="追加" />
+						</StackPanel>
+					</Button>
+					<Button Command="{Binding UpdateScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">
+						<StackPanel Style="{StaticResource ToolbarLabelButton}">
+							<Control Template="{StaticResource App-Image-Refresh}" />
+							<Label Content="更新" />
+						</StackPanel>
+					</Button>
 					<Separator />
 					<Button Command="{Binding MoveUpScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">
 						<Control Template="{StaticResource App-Image-Up}" />
@@ -114,7 +149,9 @@
 						<Control Template="{StaticResource App-Image-Down}" />
 					</Button>
 					<Separator />
-					<Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">remove</Button>
+					<Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">
+						<Control Template="{StaticResource App-Image-Remove}" />
+					</Button>
 				</ToolBar>
 
 				<Grid Grid.Row="1">
@@ -142,7 +179,7 @@
 					<GroupBox
 						Grid.Row="2"
 						Margin="{StaticResource CommonThickness}"
-						Header="params"
+						Header="パラメータ一覧"
 					>
 						<GroupBox.Resources>
 							<DataTemplate DataType="{x:Type viewmodels:BooleanScriptParameterViewModel}">
@@ -240,13 +277,16 @@
 						FontWeight="Bold"
 						Command="{Binding ExecuteCommand}"
 					>
-						execute
+						<StackPanel Orientation="Horizontal">
+							<Control Template="{StaticResource App-Image-Execute}" />
+							<TextBlock Text="処理実行" />
+						</StackPanel>
 					</Button>
 					<Button
 						Grid.Column="1"
 						Command="{Binding ShowPropertyCommand}"
 					>
-						property
+						プロパティ
 					</Button>
 				</Grid>
 			</Grid>
@@ -260,10 +300,17 @@
 				</Grid.RowDefinitions>
 
 				<ToolBar Grid.Row="0">
-					<Label Style="{StaticResource ToolbarTitle}">output</Label>
-					<Button Command="{Binding OutputAllCopyCommand}">all copy</Button>
-					<Label Style="{StaticResource ToolbarTitle}">editor</Label>
-					<Button Command="ApplicationCommands.Copy">copy</Button>
+					<Label Style="{StaticResource ToolbarTitle}">出力</Label>
+					<Button Command="{Binding OutputAllCopyCommand}">
+						<StackPanel Style="{StaticResource ToolbarLabelButton}">
+							<Control Template="{StaticResource App-Image-Clipboard-Paste}" />
+							<Label Content="全てコピー" />
+						</StackPanel>
+					</Button>
+					<Label Style="{StaticResource ToolbarTitle}">エディタ</Label>
+					<Button Command="ApplicationCommands.Copy">
+						<Control Template="{StaticResource App-Image-Clipboard-Paste}" />
+					</Button>
 				</ToolBar>
 
 				<TextBox 
@@ -289,9 +336,9 @@
 		</Grid>
 
 		<StatusBar Grid.Row="1">
-			<CheckBox x:Name="IsTopmost">topmost</CheckBox>
-			<CheckBox x:Name="IsInputBreak">input break</CheckBox>
-			<CheckBox x:Name="IsOutputBreak">output break</CheckBox>
+			<CheckBox x:Name="IsTopmost">最前面表示</CheckBox>
+			<CheckBox x:Name="IsInputBreak">[入力] 右端で折り返す</CheckBox>
+			<CheckBox x:Name="IsOutputBreak">[出力] 右端で折り返す</CheckBox>
 		</StatusBar>
 
 		<Grid
@@ -460,11 +507,12 @@
 					</FlowDocumentScrollViewer>
 					<Button
 						Grid.Row="1"
-						Margin="10"
-						Padding="10"
+						Margin="8"
+						Padding="8"
+						MaxWidth="300"
 						Command="{Binding HidePropertyCommand}"
 					>
-						close
+						閉じる
 					</Button>
 				</Grid>
 			</Border>
