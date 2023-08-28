@@ -93,10 +93,10 @@
 						</StackPanel>
 					</Button>
 					<Label Style="{StaticResource ToolbarTitle}">エディタ</Label>
-					<Button Command="ApplicationCommands.Copy">
+					<Button Command="ApplicationCommands.Copy" ToolTip="コピー">
 						<Control Template="{StaticResource App-Image-Clipboard-Copy}" />
 					</Button>
-					<Button Command="ApplicationCommands.Paste">
+					<Button Command="ApplicationCommands.Paste" ToolTip="貼り付け">
 						<Control Template="{StaticResource App-Image-Clipboard-Paste}" />
 					</Button>
 				</ToolBar>
@@ -142,14 +142,14 @@
 						</StackPanel>
 					</Button>
 					<Separator />
-					<Button Command="{Binding MoveUpScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">
+					<Button Command="{Binding MoveUpScriptCommand}" CommandParameter="{Binding SelectedScriptHead}" ToolTip="上へ移動">
 						<Control Template="{StaticResource App-Image-Up}" />
 					</Button>
-					<Button Command="{Binding MoveDownScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">
+					<Button Command="{Binding MoveDownScriptCommand}" CommandParameter="{Binding SelectedScriptHead}" ToolTip="下へ移動">
 						<Control Template="{StaticResource App-Image-Down}" />
 					</Button>
 					<Separator />
-					<Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}">
+					<Button Command="{Binding RemoveScriptCommand}" CommandParameter="{Binding SelectedScriptHead}" ToolTip="削除">
 						<Control Template="{StaticResource App-Image-Remove}" />
 					</Button>
 				</ToolBar>
@@ -308,7 +308,7 @@
 						</StackPanel>
 					</Button>
 					<Label Style="{StaticResource ToolbarTitle}">エディタ</Label>
-					<Button Command="ApplicationCommands.Copy">
+					<Button Command="ApplicationCommands.Copy" ToolTip="コピー" >
 						<Control Template="{StaticResource App-Image-Clipboard-Paste}" />
 					</Button>
 				</ToolBar>
