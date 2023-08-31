@@ -53,10 +53,12 @@ function New-UpdateItem([string] $archiveFilePath) {
 }
 
 
-$infoItems = @()
+$infoItems = @{
+	items = @()
+}
 foreach($platform in $Platforms) {
 	$archiveFilePath = Join-Path -Path $InputDirectory -ChildPath "${ArchiveBaseName}_${platform}.${Archive}"
-	$infoItems += New-UpdateItem $archiveFilePath
+	$infoItems.items += New-UpdateItem $archiveFilePath
 }
 
 ConvertTo-Json -InputObject $infoItems `
