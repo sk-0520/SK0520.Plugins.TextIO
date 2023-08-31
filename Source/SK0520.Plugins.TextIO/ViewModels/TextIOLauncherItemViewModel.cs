@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -328,7 +329,13 @@ namespace SK0520.Plugins.TextIO.ViewModels
             {
                 if (!string.IsNullOrEmpty(OutputValue))
                 {
-                    Clipboard.SetText(OutputValue);
+                    try
+                    {
+                        Clipboard.SetText(OutputValue);
+                    } catch(COMException ex)
+                    {
+                        Logger.LogError(ex, ex.Message);
+                    }
                 }
             }
         );
