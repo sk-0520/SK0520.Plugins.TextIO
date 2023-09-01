@@ -24,4 +24,9 @@
 		<EnableDynamicLoading>true</EnableDynamicLoading>
 		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
 	</PropertyGroup>
+	<ItemGroup>
+		<None Update="assembly-info.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>
