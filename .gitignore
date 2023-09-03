@@ -5,6 +5,7 @@ bin/
 /data/
 /Output/
 /Resource/Icon/*.ico
+/Source/**/Properties/launchSettings.json
 
 *.lnk
 @*
