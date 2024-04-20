@@ -9,12 +9,12 @@ jobs:
 
     steps:
       - name: <Checkout> Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
       - name: <Add> msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
+        uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
 
@@ -27,7 +27,7 @@ jobs:
         run: .\FullBuild.ps1
 
       - name: <Artifact> Plugin
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Plugin
           path: |
@@ -41,12 +41,12 @@ jobs:
     steps:
 
       - name: <Checkout> Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
       - name: <Add> msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
+        uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
 
@@ -65,16 +65,16 @@ jobs:
 
     steps:
       - name: <Checkout> Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: <Download> Application
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: Plugin
           path: Output
 
       - name: <Add> get-net-sdk-project-versions-action
-        uses: kzrnm/get-net-sdk-project-versions-action@v1
+        uses: kzrnm/get-net-sdk-project-versions-action@v2
         id: version
         with:
           proj-path: Source/Directory.Build.props
@@ -90,15 +90,17 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: <Create> Release
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
-            const releaseId = await github.rest.git.createRef({
+            const releaseResult = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "refs/tags/${{steps.version.outputs.version}}",
-              sha: context.sha
-            })
+              generate_release_notes: true,
+              name: '${{ steps.version.outputs.version }}',
+              tag_name: '${{ steps.version.outputs.version }}',
+            });
+            return releaseResult['data']['id'];
 
       - name: <Upload> Plugin
         uses: svenstaro/upload-release-action@v2
