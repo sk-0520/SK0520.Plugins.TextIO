@@ -476,7 +476,7 @@ namespace SK0520.Plugins.TextIO.Addon
             throw new NotSupportedException();
         }
 
-        public override void Execute(string? argument, ICommandExecuteParameter commandExecuteParameter, ILauncherItemExtensionExecuteParameter launcherItemExtensionExecuteParameter, ILauncherItemAddonContext launcherItemAddonContext)
+        public async override void Execute(string? argument, ICommandExecuteParameter commandExecuteParameter, ILauncherItemExtensionExecuteParameter launcherItemExtensionExecuteParameter, ILauncherItemAddonContext launcherItemAddonContext)
         {
             var viewModel = new TextIOLauncherItemViewModel(this, launcherItemAddonContext, SkeletonImplements, DispatcherWrapper, LoggerFactory);
 
@@ -485,7 +485,7 @@ namespace SK0520.Plugins.TextIO.Addon
                 DataContext = viewModel,
             };
 
-            launcherItemExtensionExecuteParameter.ViewSupporter.RegisterWindow(
+            await launcherItemExtensionExecuteParameter.ViewSupporter.RegisterWindowAsync(
                 view,
                 () => !viewModel.IsRunning,
                 () =>
