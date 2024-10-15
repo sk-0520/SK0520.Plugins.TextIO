@@ -1,4 +1,3 @@
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Logging;
 using SK0520.Plugins.TextIO.Models.Data;
 using System;

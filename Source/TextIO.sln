@@ -15,13 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Embedded", "Pe\Source\Pe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{017F98D3-BCC6-47BF-B7F5-B175F630D567}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "standard", "standard", "{D386D33E-1EA9-4C7C-890A-F9CDACC9DB3C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "library", "library", "{D386D33E-1EA9-4C7C-890A-F9CDACC9DB3C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Standard.Base", "Pe\Source\Pe\Pe.Standard.Base\Pe.Standard.Base.csproj", "{3F91F3BF-D90C-45AA-B5BE-B4116F0CE01D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Library.Base", "Pe\Source\Pe\Pe.Library.Base\Pe.Library.Base.csproj", "{3F91F3BF-D90C-45AA-B5BE-B4116F0CE01D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Standard.Database", "Pe\Source\Pe\Pe.Standard.Database\Pe.Standard.Database.csproj", "{774BD026-81BB-4B1B-97ED-1D3E99AE6DFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Library.Database", "Pe\Source\Pe\Pe.Library.Database\Pe.Library.Database.csproj", "{774BD026-81BB-4B1B-97ED-1D3E99AE6DFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Standard.DependencyInjection", "Pe\Source\Pe\Pe.Standard.DependencyInjection\Pe.Standard.DependencyInjection.csproj", "{2E2090E4-F21C-4B6B-9189-CBF3C987E395}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Library.DependencyInjection", "Pe\Source\Pe\Pe.Library.DependencyInjection\Pe.Library.DependencyInjection.csproj", "{2E2090E4-F21C-4B6B-9189-CBF3C987E395}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.PInvoke", "Pe\Source\Pe\Pe.PInvoke\Pe.PInvoke.csproj", "{EBA36B93-D898-4FD7-9567-E2DD8DF5AA97}"
 EndProject
@@ -35,9 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Main", "Pe\Source\Pe\Pe.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SK0520.Plugins.TextIO.Test", "SK0520.Plugins.TextIO.Test\SK0520.Plugins.TextIO.Test.csproj", "{A61E6114-5548-498A-BB66-C8D7473F37CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Standard.CliProxy", "Pe\Source\Pe\Pe.Standard.CliProxy\Pe.Standard.CliProxy.csproj", "{E41CC505-3C64-469D-AAB7-48885A09230B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Library.CliProxy", "Pe\Source\Pe\Pe.Library.CliProxy\Pe.Library.CliProxy.csproj", "{E41CC505-3C64-469D-AAB7-48885A09230B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Standard.Property", "Pe\Source\Pe\Pe.Standard.Property\Pe.Standard.Property.csproj", "{74154E4A-C6B7-437F-929C-E2F028843B71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pe.Library.Property", "Pe\Source\Pe\Pe.Library.Property\Pe.Library.Property.csproj", "{74154E4A-C6B7-437F-929C-E2F028843B71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

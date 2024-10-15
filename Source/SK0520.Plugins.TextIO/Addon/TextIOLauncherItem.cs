@@ -24,6 +24,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SK0520.Plugins.TextIO.Addon
@@ -492,7 +493,8 @@ namespace SK0520.Plugins.TextIO.Addon
                 {
                     view.DataContext = null;
                     viewModel.Dispose();
-                }
+                },
+                CancellationToken.None
             );
         }
 
