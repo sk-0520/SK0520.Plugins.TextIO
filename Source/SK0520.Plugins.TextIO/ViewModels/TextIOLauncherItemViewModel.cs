@@ -46,13 +46,13 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #endregion
 
-        internal TextIOLauncherItemViewModel(TextIOLauncherItem item, ILauncherItemAddonContext launcherItemAddonContext, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
-            : base(skeletonImplements, dispatcherWrapper, loggerFactory)
+        internal TextIOLauncherItemViewModel(TextIOLauncherItem item, ILauncherItemAddonContext launcherItemAddonContext, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
+            : base(skeletonImplements, contextDispatcher, loggerFactory)
         {
             Item = item;
             LauncherItemAddonContext = launcherItemAddonContext;
             var heads = Item.GetScriptHeads(LauncherItemAddonContext.Storage.Persistence);
-            ScriptHeadCollection = new ObservableCollection<ScriptHeadViewModel>(heads.Select(a => new ScriptHeadViewModel(a, skeletonImplements, dispatcherWrapper, loggerFactory)));
+            ScriptHeadCollection = new ObservableCollection<ScriptHeadViewModel>(heads.Select(a => new ScriptHeadViewModel(a, skeletonImplements, contextDispatcher, loggerFactory)));
         }
 
         #region property
@@ -134,7 +134,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             var filePath = dialog.FileName;
                             var file = new FileInfo(filePath);
                             var script = Item.AddScriptFile(file);
-                            ScriptHeadCollection.Add(new ScriptHeadViewModel(script.Head, Implements, DispatcherWrapper, LoggerFactory));
+                            ScriptHeadCollection.Add(new ScriptHeadViewModel(script.Head, Implements, ContextDispatcher, LoggerFactory));
                         }
                     }
                     catch (Exception ex)
@@ -175,9 +175,9 @@ namespace SK0520.Plugins.TextIO.ViewModels
                         var index = ScriptHeadCollection.IndexOf(o);
                         if (index != -1)
                         {
-                            await DispatcherWrapper.BeginAsync(() =>
+                            await ContextDispatcher.BeginAsync(() =>
                             {
-                                var newHead = new ScriptHeadViewModel(scriptSetting.Head, Implements, DispatcherWrapper, LoggerFactory);
+                                var newHead = new ScriptHeadViewModel(scriptSetting.Head, Implements, ContextDispatcher, LoggerFactory);
                                 ScriptHeadCollection.RemoveAt(index);
                                 ScriptHeadCollection.Insert(index, newHead);
                                 SelectedScriptHead = newHead;
@@ -243,7 +243,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                             var meta = Item.GetMeta(SelectedScriptHead.ScriptId);
                             if (meta.DebugHotReload && Uri.TryCreate(meta.UpdateUri, UriKind.Absolute, out var updateUri))
                             {
-                                Logger.LogInformation("[{SCRIPT}] デバッグアップデート確認 {updateUri}", SelectedScriptHead.ScriptId, updateUri);
+                                Logger.LogInformation("[{SCRIPT}] デバッグアップデート確認 {UpdateUri}", SelectedScriptHead.ScriptId, updateUri);
                                 var scriptSetting = await Item.UpdateScriptIfNewVersionAsync(meta, updateUri);
                                 if (scriptSetting is not null)
                                 {
@@ -263,7 +263,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                                 })
                                 .ToDictionary(k => k.Name, v => v.RawValue)
                             ;
-                            Logger.LogInformation("[{SCRIPT}] 実行 {options}", SelectedScriptHead.ScriptId, options);
+                            Logger.LogInformation("[{SCRIPT}] 実行 {Options}", SelectedScriptHead.ScriptId, options);
                             var result = await Item.RunScriptAsync(SelectedScriptHead.ScriptId, InputValue, options);
                             Logger.LogInformation("[{SCRIPT}] <{SUCCESS}> {TIME} - {KIND}: {DATA}", SelectedScriptHead.ScriptId, result.Success ? "Success" : "Failure", result.EndTimestamp - result.BeginTimestamp, result.Kind, result.Data);
                             if (result.Success)
@@ -313,7 +313,7 @@ namespace SK0520.Plugins.TextIO.ViewModels
                 var head = Item.GetHead(SelectedScriptHead.ScriptId);
                 var meta = Item.GetMeta(SelectedScriptHead.ScriptId);
 
-                ScriptProperty = new ScriptPropertyViewModel(head, meta, Implements, DispatcherWrapper, LoggerFactory);
+                ScriptProperty = new ScriptPropertyViewModel(head, meta, Implements, ContextDispatcher, LoggerFactory);
             }
         );
 
