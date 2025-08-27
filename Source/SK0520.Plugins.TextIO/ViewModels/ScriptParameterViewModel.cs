@@ -14,17 +14,17 @@ namespace SK0520.Plugins.TextIO.ViewModels
 {
     public class ScriptParameterViewModelFactory
     {
-        public ScriptParameterViewModelFactory(ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
+        public ScriptParameterViewModelFactory(ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
         {
             SkeletonImplements = skeletonImplements;
-            DispatcherWrapper = dispatcherWrapper;
+            ContextDispatcher = contextDispatcher;
             LoggerFactory = loggerFactory;
         }
 
         #region property
 
         private ISkeletonImplements SkeletonImplements { get; }
-        private IDispatcherWrapper DispatcherWrapper { get; }
+        private IContextDispatcher ContextDispatcher { get; }
         private ILoggerFactory LoggerFactory { get; }
 
         #endregion
@@ -35,11 +35,11 @@ namespace SK0520.Plugins.TextIO.ViewModels
         {
             return parameter.Kind switch
             {
-                ScriptParameterKind.Boolean => new BooleanScriptParameterViewModel(parameter, SkeletonImplements, DispatcherWrapper, LoggerFactory),
-                ScriptParameterKind.String => new StringScriptParameterViewModel(parameter, SkeletonImplements, DispatcherWrapper, LoggerFactory),
-                ScriptParameterKind.Integer => new IntegerScriptParameterViewModel(parameter, SkeletonImplements, DispatcherWrapper, LoggerFactory),
-                ScriptParameterKind.Decimal => new DecimalScriptParameterViewModel(parameter, SkeletonImplements, DispatcherWrapper, LoggerFactory),
-                ScriptParameterKind.DateTime => new DateTimeScriptParameterViewModel(parameter, SkeletonImplements, DispatcherWrapper, LoggerFactory),
+                ScriptParameterKind.Boolean => new BooleanScriptParameterViewModel(parameter, SkeletonImplements, ContextDispatcher, LoggerFactory),
+                ScriptParameterKind.String => new StringScriptParameterViewModel(parameter, SkeletonImplements, ContextDispatcher, LoggerFactory),
+                ScriptParameterKind.Integer => new IntegerScriptParameterViewModel(parameter, SkeletonImplements, ContextDispatcher, LoggerFactory),
+                ScriptParameterKind.Decimal => new DecimalScriptParameterViewModel(parameter, SkeletonImplements, ContextDispatcher, LoggerFactory),
+                ScriptParameterKind.DateTime => new DateTimeScriptParameterViewModel(parameter, SkeletonImplements, ContextDispatcher, LoggerFactory),
                 _ => throw new NotImplementedException(parameter.Kind.ToString()),
             };
         }
@@ -49,8 +49,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
     public abstract class ScriptParameterViewModelBase : ViewModelSkeleton
     {
-        protected ScriptParameterViewModelBase(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
-            : base(skeletonImplements, dispatcherWrapper, loggerFactory)
+        protected ScriptParameterViewModelBase(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
+            : base(skeletonImplements, contextDispatcher, loggerFactory)
         {
             Parameter = parameter;
         }
@@ -78,8 +78,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #endregion
 
-        protected ScriptParameterViewModelBase(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
-            : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
+        protected ScriptParameterViewModelBase(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
+            : base(parameter, skeletonImplements, contextDispatcher, loggerFactory)
         { }
 
         #region property
@@ -100,16 +100,16 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
     public sealed class BooleanScriptParameterViewModel : ScriptParameterViewModelBase<bool?>
     {
-        public BooleanScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
-            : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
+        public BooleanScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
+            : base(parameter, skeletonImplements, contextDispatcher, loggerFactory)
         { 
             Value = IsRequired ? false : null;
         }
     }
     public sealed class StringScriptParameterViewModel : ScriptParameterViewModelBase<string>
     {
-        public StringScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
-            : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
+        public StringScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
+            : base(parameter, skeletonImplements, contextDispatcher, loggerFactory)
         {
             Value = IsRequired ? string.Empty : null;
         }
@@ -117,8 +117,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
     public sealed class IntegerScriptParameterViewModel : ScriptParameterViewModelBase<int?>
     {
-        public IntegerScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
-            : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
+        public IntegerScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
+            : base(parameter, skeletonImplements, contextDispatcher, loggerFactory)
         { 
             Value = IsRequired ? 0 : null;
         }
@@ -126,16 +126,16 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
     public sealed class DecimalScriptParameterViewModel : ScriptParameterViewModelBase<decimal?>
     {
-        public DecimalScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
-            : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
+        public DecimalScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
+            : base(parameter, skeletonImplements, contextDispatcher, loggerFactory)
         {
             Value = IsRequired ? 0 : null;
         }
     }
     public sealed class DateTimeScriptParameterViewModel : ScriptParameterViewModelBase<DateTime?>
     {
-        public DateTimeScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
-            : base(parameter, skeletonImplements, dispatcherWrapper, loggerFactory)
+        public DateTimeScriptParameterViewModel(ScriptParameter parameter, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
+            : base(parameter, skeletonImplements, contextDispatcher, loggerFactory)
         {
             Value = DateTime.Now;
         }

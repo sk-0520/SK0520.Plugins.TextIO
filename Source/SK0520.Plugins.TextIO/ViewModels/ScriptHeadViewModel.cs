@@ -19,11 +19,11 @@ namespace SK0520.Plugins.TextIO.ViewModels
 
         #endregion
 
-        public ScriptHeadViewModel(ScriptHeadSetting headSetting, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory) 
-            :base(skeletonImplements, dispatcherWrapper, loggerFactory)
+        public ScriptHeadViewModel(ScriptHeadSetting headSetting, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory) 
+            :base(skeletonImplements, contextDispatcher, loggerFactory)
         {
             HeadSetting = headSetting;
-            var factory = new ScriptParameterViewModelFactory(skeletonImplements, dispatcherWrapper, loggerFactory);
+            var factory = new ScriptParameterViewModelFactory(skeletonImplements, contextDispatcher, loggerFactory);
             ParameterCollection = new ObservableCollection<ScriptParameterViewModelBase>(HeadSetting.Parameters.Select(a => factory.Create(a)));
         }
 

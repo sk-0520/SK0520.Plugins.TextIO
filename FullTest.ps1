@@ -8,7 +8,7 @@ $pluginName = 'SK0520.Plugins.TextIO'
 
 $scriptDirPath = Join-Path -Path $currentDirPath -ChildPath 'Build'
 
-$platforms = @('x64', 'x86')
+$platforms = @('x64')
 
 $scripts = @{
 	test = Join-Path -Path $scriptDirPath -ChildPath 'test-project.ps1'

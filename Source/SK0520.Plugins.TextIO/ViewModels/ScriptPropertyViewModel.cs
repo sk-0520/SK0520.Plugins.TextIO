@@ -14,8 +14,8 @@ namespace SK0520.Plugins.TextIO.ViewModels
 {
     public class ScriptPropertyViewModel : ViewModelSkeleton, IScriptId
     {
-        public ScriptPropertyViewModel(ScriptHeadSetting headSetting,ScriptMetaSetting metaSetting, ISkeletonImplements skeletonImplements, IDispatcherWrapper dispatcherWrapper, ILoggerFactory loggerFactory)
-            : base(skeletonImplements, dispatcherWrapper, loggerFactory)
+        public ScriptPropertyViewModel(ScriptHeadSetting headSetting,ScriptMetaSetting metaSetting, ISkeletonImplements skeletonImplements, IContextDispatcher contextDispatcher, ILoggerFactory loggerFactory)
+            : base(skeletonImplements, contextDispatcher, loggerFactory)
         {
             if(headSetting.ScriptId != metaSetting.ScriptId)
             {

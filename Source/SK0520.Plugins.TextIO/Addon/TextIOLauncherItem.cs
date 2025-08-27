@@ -345,7 +345,7 @@ namespace SK0520.Plugins.TextIO.Addon
                     parameters = parameters,
                 });
 
-                var result = handler.Invoke(args);
+                var result = handler.Call(args);
                 var endTimestamp = DateTime.UtcNow;
 
                 if (!(result.IsString() || result.IsObject() || result.IsNumber() || result.IsBoolean()) || result.IsArray())
@@ -479,7 +479,7 @@ namespace SK0520.Plugins.TextIO.Addon
 
         public async override void Execute(string? argument, ICommandExecuteParameter commandExecuteParameter, ILauncherItemExtensionExecuteParameter launcherItemExtensionExecuteParameter, ILauncherItemAddonContext launcherItemAddonContext)
         {
-            var viewModel = new TextIOLauncherItemViewModel(this, launcherItemAddonContext, SkeletonImplements, DispatcherWrapper, LoggerFactory);
+            var viewModel = new TextIOLauncherItemViewModel(this, launcherItemAddonContext, SkeletonImplements, ContextDispatcher, LoggerFactory);
 
             var view = new TextIOLauncherItemWindow()
             {
